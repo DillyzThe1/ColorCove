@@ -1,5 +1,6 @@
 package;
 
+import Paths.HiddenPaths;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -18,7 +19,7 @@ class OutdatedSubState extends BlurryFlxSubState
 
 	public static var versionLink:String = 'https://raw.githubusercontent.com/DillyzThe1/ColorCove/master/colorCove.versionDownload';
 
-	public static var curBuildNum:Int = 496;
+	public static var curBuildNum:Int = 0;
 	public static var curBuildVers:String = '0.6.0';
 	public static var curBuildName:String = 'Visually Enhanced Pre-Release';
 
@@ -50,17 +51,25 @@ class OutdatedSubState extends BlurryFlxSubState
 			FlxColor.BLACK, true);
 		warningText.antialiasing = ClientSettings.getBoolByString('antialiasing', true);
 
-		warningText.text = 'Warning!\n\n'
-			+ 'You\'re running the $curBuildName on $curBuildVers (build $curBuildNum)!\n'
-			+ 'The current public build is the $publicBuildName on $publicBuildVers (build $publicBuildNum)!\n' #if desktop
-		+
-		(curBuildNum < publicBuildNum ? 'Please consider updating your game!\n\n' : 'Please be aware that these changes aren\'t final!\n(Also, please report any bugs on the github page.)\n\n')
-		#else
-		+ 'Please download a desktop release!\n\n'
-		#end
-		+ 'https://www.github.com/DillyzThe1/ColorCove/releases/latest/\n\n'
-		+
-		'(${FlxG.onMobile ? 'Hold to igonre, Tap to download.\n' : 'ESCAPE to ignore, ENTER to ${#if desktop 'update' #else 'download' #end}, C to view Changelog, and I to report bugs.)\n'})';
+		curBuildNum = Std.parseInt(HiddenPaths.txt('cur build'));
+
+		if (curBuildNum == 0)
+			warningText.text = 'Warning!\n\n'
+				+ 'Your build of the game is currently null or invalid.\nDid you recompile without build.bat?\n\n'
+				+ 'If this is a mistake, please submit an issue immediantly.\n\n';
+		else
+		{
+			warningText.text = 'Warning!\n\n'
+				+ 'You\'re running the $curBuildName on $curBuildVers (build $curBuildNum)!\n'
+				+ 'The current public build is the $publicBuildName on $publicBuildVers (build $publicBuildNum)!\n' #if desktop
+			+
+			(curBuildNum < publicBuildNum ? 'Please consider updating your game!\n\n' : 'Please be aware that these changes aren\'t final!\n(Also, please report any bugs on the github page.)\n\n')
+			#else
+			+ 'Please download a desktop release!\n\n'
+			#end
+			+ 'https://www.github.com/DillyzThe1/ColorCove/releases/latest/\n\n';
+		}
+		warningText.text += '(${FlxG.onMobile ? 'Hold to igonre, Tap to download.\n' : 'ESCAPE to ignore, ENTER to ${#if desktop 'update' #else 'download' #end}, C to view Changelog, and I to report bugs.)\n'})';
 		warningText.screenCenter();
 
 		popupBG.cameras = warningText.cameras = [bruhCam];
