@@ -15,9 +15,14 @@ import flixel.util.FlxSort;
 import lime.app.Application;
 import lime.graphics.Image;
 import openfl.display.BitmapData;
+#if MOUSE_SHADER_TESTING
+import shaders.MouseTrackerShader.MouseTrackerShaderManager;
+#end
 
 class PlayState extends FlxState
 {
+	public static var instance:PlayState;
+
 	public var camGame:FlxCamera;
 	public var camHUD:FlxCamera;
 
@@ -47,6 +52,12 @@ class PlayState extends FlxState
 	public var difficulty:Float = 0.5;
 	public var score:Float = 0;
 
+	#if MOUSE_SHADER_TESTING
+	var mouseShaderManager:MouseTrackerShaderManager;
+	#end
+
+	public var showTutorial:Bool = false;
+
 	// public var charCountPerDifficulty:Int = 25;
 
 	public function killChar(instance:Character, phil:Bool)
@@ -61,6 +72,8 @@ class PlayState extends FlxState
 
 	public function genCharacter()
 	{
+		if (!playableYet)
+			return;
 		var aliveLength:Int = 0;
 		charList.forEachAlive(function(the:Character)
 		{
@@ -93,8 +106,15 @@ class PlayState extends FlxState
 	{
 		super.create();
 
+		instance = this;
+
+		camMovement = ClientSettings.getBoolByString('cam.movement', true);
+		camZooming = ClientSettings.getFloatByString('cam.zooming', 1.0);
+		camRotation = ClientSettings.getFloatByString('cam.rotation', 1.0);
+
+		showTutorial = ClientSettings.getBoolByString('showtutorial', true);
+
 		musicBox = new SongHandler();
-		musicBox.playSong('side-walkin\'', 118);
 		musicBox.stepFunction = songStep;
 		musicBox.beatFunction = songBeat;
 
@@ -107,6 +127,11 @@ class PlayState extends FlxState
 		FlxG.cameras.add(camHUD, false);
 		camGame.bgColor = FlxColor.fromString("#99CCFF");
 
+		#if MOUSE_SHADER_TESTING
+		mouseShaderManager = new MouseTrackerShaderManager(camGame);
+		CCUtil.setCameraFilters(camGame, [mouseShaderManager.shader]);
+		#end
+
 		// bg spr loading
 		sideWalkSpr = new FlxSprite(-1571, 324.3).loadGraphic(Paths.image('Sidewalk'));
 		// sideWalkSpr.x = 1280 / 2 - sideWalkSpr.width / 2;
@@ -118,7 +143,7 @@ class PlayState extends FlxState
 
 		sideWalkSpr.setGraphicSize(10836, 1639);
 
-		sideWalkSpr.antialiasing = streetOverlaySpr.antialiasing = ClientSettings.antialiasing;
+		sideWalkSpr.antialiasing = streetOverlaySpr.antialiasing = ClientSettings.getBoolByString('antialiasing', true);
 
 		// adding the bg
 		add(sideWalkSpr);
@@ -139,7 +164,8 @@ class PlayState extends FlxState
 		camFollow = new FlxObject();
 		camGame.follow(camFollow, LOCKON, 0.03 / (FlxG.updateFramerate / 120));
 
-		genCharacter();
+		if (!showTutorial)
+			genCharacter();
 
 		// score
 		scoreList = new FlxTypedSpriteGroup<PopupText>();
@@ -163,7 +189,7 @@ class PlayState extends FlxState
 			thingTextt.setFormat(Paths.font('FredokaOne-Regular'), Std.int(16 * textScale), FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE,
 				FlxColor.BLACK, true);
 			thingTextt.cameras = [camHUD];
-			thingTextt.antialiasing = ClientSettings.antialiasing;
+			thingTextt.antialiasing = ClientSettings.getBoolByString('antialiasing', true);
 
 			add(thingTextt);
 		}
@@ -172,7 +198,30 @@ class PlayState extends FlxState
 		add(scoreText);
 
 		diffText.cameras = scoreText.cameras = [camHUD];
-		diffText.antialiasing = scoreText.antialiasing = ClientSettings.antialiasing;
+		diffText.antialiasing = scoreText.antialiasing = ClientSettings.getBoolByString('antialiasing', true);
+
+		canGenerate(!showTutorial);
+		if (showTutorial)
+		{
+			musicBox.playSong('timestop', 90, 0.35);
+			openSubState(new TutorialSubState());
+		}
+		else
+			musicBox.playSong('side-walkin\'', 118);
+	}
+
+	var playableYet:Bool = false;
+
+	public function canGenerate(canIPleasePlayTheGame:Bool, ?closeSubStatee:Bool = false)
+	{
+		playableYet = canIPleasePlayTheGame;
+		genCharacter();
+
+		if (closeSubStatee)
+		{
+			closeSubState();
+			musicBox.playSong('side-walkin\'', 118);
+		}
 	}
 
 	public var totalElasped:Float = 0;
@@ -200,6 +249,11 @@ class PlayState extends FlxState
 		musicBox.update();
 
 		totalElasped += elapsed;
+
+		#if MOUSE_SHADER_TESTING
+		if (mouseShaderManager != null)
+			mouseShaderManager.updateShaderInfo(camGame);
+		#end
 
 		// DEBUG
 		/*#if debug
@@ -238,6 +292,8 @@ class PlayState extends FlxState
 		var trolled = FlxG.mouse.justPressed;
 
 		for (i in charList)
+		{
+			i.shaderUpdate(elapsed, camGame, camFollow);
 			if (FlxG.mouse.overlaps(i) && FlxG.mouse.justPressed)
 				if (i.phil && !i.philDied)
 				{
@@ -250,6 +306,7 @@ class PlayState extends FlxState
 					popupText(i.getGraphicMidpoint().x, i.getGraphicMidpoint().y, Std.int(scorePlus));
 					musicBox.playSound('kill', 0.5);
 				}
+		}
 
 		if (trolled)
 		{
@@ -316,13 +373,17 @@ class PlayState extends FlxState
 		bruhTween = FlxTween.tween(camGame, {zoom: defZoom, angle: 0}, musicBox.getStepCrochet() / 500, {ease: FlxEase.cubeOut});
 	}
 
+	public var camMovement:Bool;
+	public var camZooming:Float;
+	public var camRotation:Float;
+
 	public function songStep()
 	{
-		if (ClientSettings.cameraMovement && beatingPatterns[curBeatPat].contains(musicBox.curBeat % 16) && musicBox.curStep % 64 == 62)
+		if (camMovement && beatingPatterns[curBeatPat].contains(musicBox.curBeat % 16) && musicBox.curStep % 64 == 62)
 		{
 			// trace(musicBox.curStep);
-			camGame.zoom = defZoom + zoomAddition * ClientSettings.camZooming;
-			camGame.angle = (musicBox.curBeat % 2 == 1 ? angleAddition : -angleAddition) * ClientSettings.camRotation;
+			camGame.zoom = defZoom + zoomAddition * camZooming;
+			camGame.angle = (musicBox.curBeat % 2 == 1 ? angleAddition : -angleAddition) * camRotation;
 			tweenCam();
 		}
 		if (musicBox.curStep % 4 == 3)
@@ -364,11 +425,11 @@ class PlayState extends FlxState
 		for (i in 0...musicBox.curBeat)
 			checkBeat(i);
 
-		if (!ClientSettings.cameraMovement || !beatingPatterns[curBeatPat].contains(musicBox.curBeat % 16))
+		if (!camMovement || !beatingPatterns[curBeatPat].contains(musicBox.curBeat % 16))
 			return;
 		// trace(musicBox.curBeat);
-		camGame.zoom = defZoom + zoomAddition * ClientSettings.camZooming;
-		camGame.angle = (musicBox.curBeat % 2 == 1 ? angleAddition : -angleAddition) * ClientSettings.camRotation;
+		camGame.zoom = defZoom + zoomAddition * camZooming;
+		camGame.angle = (musicBox.curBeat % 2 == 1 ? angleAddition : -angleAddition) * camRotation;
 		tweenCam();
 	}
 }

@@ -1,13 +1,26 @@
 package;
 
+import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import openfl.display.ShaderParameter;
+import shaders.PhilShader;
+#if !DISABLE_NICHOLAS_SHADER
+import shaders.NicholasShader.NicholasHintEffect;
+import shaders.NicholasShader;
+#end
 
 class Character extends CCSprite
 {
 	public var finishFunc:(instance:Character, phil:Bool) -> Void;
+
+	public var philShader:PhilShader;
+	#if !DISABLE_NICHOLAS_SHADER
+	public var nicholasShader:NicholasHintEffect;
+	#end
 
 	override public function new(?x:Float = 0, ?y:Float = 0)
 	{
@@ -24,6 +37,14 @@ class Character extends CCSprite
 			if (anim == 'death-alt')
 				alpha = 0;
 		};
+
+		doPhilShader = ClientSettings.getBoolByString('philwarningshader', true);
+	}
+
+	override public function destroy()
+	{
+		philShader = null;
+		super.destroy();
 	}
 
 	private var danceCount:Int = 0;
@@ -39,6 +60,7 @@ class Character extends CCSprite
 
 	public var phil:Bool = false;
 	public var philDied:Bool = false;
+	public var doPhilShader:Bool = false;
 
 	public var speed:Float = 0;
 
@@ -52,6 +74,7 @@ class Character extends CCSprite
 	}
 
 	// public var walkTween:FlxTween;
+	var theStartX:Float = 0;
 	var theEndX:Float = 0;
 
 	public function resetGuy(startX:Float, endX:Float, y:Float, diff:Float)
@@ -68,8 +91,41 @@ class Character extends CCSprite
 
 		// playAnim(phil ? 'idle-alt' : 'idle', true);
 
+		theStartX = startX;
 		theEndX = endX;
+
 		funnyDance(false);
+
+		if (phil) // phil)
+		{
+			if (doPhilShader)
+			{
+				if (philShader == null)
+					philShader = new PhilShader();
+				this.shader = philShader;
+			}
+			else
+				this.shader = null;
+			// setShaderFloat(philShader.elapsedTime, 0);
+			// setShaderFloat(philShader.philShaderRNG, FlxG.random.float());
+		}
+		else
+			#if !DISABLE_NICHOLAS_SHADER
+			{
+				if (ClientSettings.getBoolByString('nicholashintshader', true))
+				{
+					if (nicholasShader == null)
+						nicholasShader = new NicholasHintEffect(this);
+					this.shader = nicholasShader.shader;
+				}
+				else
+					this.shader = null;
+				// setShaderFloat(philShader.elapsedTime, 0);
+				// setShaderFloat(philShader.philShaderRNG, FlxG.random.float());
+			}
+			#else
+			this.shader = null;
+			#end
 
 		/*walkTween = FlxTween.tween(this, {x: endX}, snapFloat(((rand / 10) * 12.5) - diff / 50, 2.5, 10) - (phil ? 0.5 : 0.05), {
 			ease: FlxEase.linear,
@@ -83,6 +139,22 @@ class Character extends CCSprite
 		});*/
 	}
 
+	public function setShaderFloat(sp:ShaderParameter<Float>, value:Float)
+	{
+		if (sp.value == null)
+			sp.value = [value];
+		else
+			sp.value[0] = value;
+	}
+
+	public function getShaderFloat(sp:ShaderParameter<Float>):Float
+	{
+		if (sp.value == null)
+			return 0;
+		else
+			return sp.value[0];
+	}
+
 	override public function update(e:Float)
 	{
 		super.update(e);
@@ -94,5 +166,25 @@ class Character extends CCSprite
 		}
 		else
 			x -= speed * e * 45;
+	}
+
+	public function shaderUpdate(e:Float, cam:FlxCamera, camFollow:FlxObject)
+	{
+		if (philShader != null && phil)
+		{
+			var intendedVal:Float = 100 - (Math.abs((x / (theEndX - theStartX)) * 100) - 20);
+			setShaderFloat(philShader.philProgress, intendedVal);
+			setShaderFloat(philShader.elapsedTime, getShaderFloat(philShader.elapsedTime) + e);
+
+			#if debug
+			if (FlxG.keys.justPressed.P && phil)
+				trace('PHIL PROGRESS: ${getShaderFloat(philShader.philProgress)}, INTENDED PROGRESS: $intendedVal');
+			#end
+		}
+
+		#if !DISABLE_NICHOLAS_SHADER
+		if (nicholasShader != null && !phil)
+			nicholasShader.updateStuff(cam, camFollow);
+		#end
 	}
 }

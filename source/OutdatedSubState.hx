@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
@@ -10,15 +11,15 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 
-class OutdatedSubState extends FlxSubState
+class OutdatedSubState extends BlurryFlxSubState
 {
 	var warningText:FlxText;
 
 	public static var versionLink:String = 'https://raw.githubusercontent.com/DillyzThe1/ColorCove/master/colorCove.versionDownload';
 
-	public static var curBuildNum:Int = 361;
-	public static var curBuildVers:String = '0.5.0';
-	public static var curBuildName:String = 'Game-Jam Release';
+	public static var curBuildNum:Int = 496;
+	public static var curBuildVers:String = '0.6.0';
+	public static var curBuildName:String = 'Visually Enhanced Pre-Release';
 
 	public static var publicBuildNum:Int = curBuildNum;
 	public static var publicBuildVers:String = curBuildVers;
@@ -28,47 +29,77 @@ class OutdatedSubState extends FlxSubState
 
 	public var exitFunc:() -> Void;
 
+	var bruhCam:FlxCamera;
+
 	override public function create()
 	{
+		super.create();
+
+		bruhCam = new FlxCamera();
+		bruhCam.bgColor.alpha = 0;
+		FlxG.cameras.add(bruhCam, false);
+
 		var popupBG:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		popupBG.alpha = 0;
-		add(popupBG);
 		FlxTween.tween(popupBG, {alpha: 0.5}, 0.75, {ease: FlxEase.quadIn});
 
 		var textScale = 2;
 		warningText = new FlxText(20, 20 + (20 * textScale) * 2, 0, 'w', Std.int(16 * textScale), true);
 		warningText.setFormat(Paths.font('FredokaOne-Regular'), Std.int(16 * textScale), FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE,
 			FlxColor.BLACK, true);
-		warningText.antialiasing = ClientSettings.antialiasing;
-
-		add(warningText);
+		warningText.antialiasing = ClientSettings.getBoolByString('antialiasing', true);
 
 		warningText.text = 'Warning!\n\n'
 			+ 'You\'re running the $curBuildName on $curBuildVers (build $curBuildNum)!\n'
 			+ 'The current public build is the $publicBuildName on $publicBuildVers (build $publicBuildNum)!\n' #if desktop
-		+ 'Please consider updating your game!\n\n'
+		+
+		(curBuildNum < publicBuildNum ? 'Please consider updating your game!\n\n' : 'Please be aware that these changes aren\'t final!\n(Also, please report any bugs on the github page.)\n\n')
 		#else
 		+ 'Please download a desktop release!\n\n'
 		#end
 		+ 'https://www.github.com/DillyzThe1/ColorCove/releases/latest/\n\n'
 		+
-		'(${FlxG.onMobile ? 'Hold to igonre, ENTER to download.' : 'ESCAPE to ignore, ENTER to ${#if desktop 'update' #else 'download' #end}, C to view Changelog.'})';
+		'(${FlxG.onMobile ? 'Hold to igonre, Tap to download.\n' : 'ESCAPE to ignore, ENTER to ${#if desktop 'update' #else 'download' #end}, C to view Changelog, and I to report bugs.)\n'})';
 		warningText.screenCenter();
+
+		popupBG.cameras = warningText.cameras = [bruhCam];
+
+		add(popupBG);
+		add(warningText);
+
 		exitFunc = function()
 		{
-			FlxG.switchState(new MenuState());
+			// "please stop spamming it's gonna break the game!!" 🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓
+			stopSpammingNerd = true;
+			onEndBlurOut = function()
+			{
+				endBlurEffects();
+				FlxG.cameras.remove(bruhCam);
+				// FlxG.switchState(new MenuState());
+				MenuState.instance.closeSubState();
+			};
+			tweenOutBlur();
+			FlxTween.tween(bruhCam, {alpha: 0}, 0.65, {ease: FlxEase.cubeOut});
 		};
 	}
+
+	var stopSpammingNerd:Bool = false;
 
 	override public function update(e:Float)
 	{
 		super.update(e);
+
+		if (stopSpammingNerd)
+			return;
+
 		if (FlxG.keys.justPressed.ESCAPE)
 			exitFunc();
 		else if (FlxG.keys.justPressed.ENTER)
 			FlxG.openURL('https://www.github.com/DillyzThe1/ColorCove/releases/latest/');
 		else if (FlxG.keys.justPressed.C)
 			FlxG.openURL('https://www.github.com/DillyzThe1/ColorCove/blob/main/Changelog.md');
+		else if (FlxG.keys.justPressed.I)
+			FlxG.openURL('https://github.com/DillyzThe1/ColorCove/issues/new/choose/');
 
 		if (FlxG.onMobile)
 			if (FlxG.mouse.pressed)

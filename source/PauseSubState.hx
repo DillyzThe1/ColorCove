@@ -10,8 +10,10 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import openfl.filters.BitmapFilter;
+import openfl.filters.BlurFilter;
 
-class PauseSubState extends FlxSubState
+class PauseSubState extends BlurryFlxSubState
 {
 	var bruhCam:FlxCamera;
 
@@ -39,6 +41,11 @@ class PauseSubState extends FlxSubState
 	override public function create()
 	{
 		super.create();
+
+		bruhCam = new FlxCamera();
+		bruhCam.bgColor.alpha = 0;
+		FlxG.cameras.add(bruhCam, false);
+
 		bruhCam = new FlxCamera();
 		bruhCam.bgColor.alpha = 0;
 		FlxG.cameras.add(bruhCam, false);
@@ -61,7 +68,7 @@ class PauseSubState extends FlxSubState
 		endText.setFormat(Paths.font('FredokaOne-Regular'), Std.int(16 * textScale), FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE,
 			FlxColor.BLACK, true);
 		endText.buttonType = 'End Game';
-		reportBugText.antialiasing = endText.antialiasing = resumeText.antialiasing = ClientSettings.antialiasing;
+		reportBugText.antialiasing = endText.antialiasing = resumeText.antialiasing = ClientSettings.getBoolByString('antialiasing', true);
 
 		optionList.add(resumeText);
 		optionList.add(reportBugText);
@@ -165,10 +172,15 @@ class PauseSubState extends FlxSubState
 	{
 		canInteract = false;
 		exiting = false;
+
+		tweenOutBlur();
+
 		bgTween = FlxTween.tween(bruhCam, {alpha: 0}, 1, {
 			ease: FlxEase.elasticInOut,
 			onComplete: function(t:FlxTween)
 			{
+				endBlurEffects();
+
 				FlxG.cameras.remove(bruhCam, true);
 				parentInstance.closeSubState();
 			}

@@ -16,7 +16,7 @@ class CCSprite extends FlxSprite
 			addAnim('idle', idleName, idleLooped, new FlxPoint(0, 0));
 			playAnim('idle', true);
 		}
-		antialiasing = ClientSettings.antialiasing;
+		antialiasing = ClientSettings.getBoolByString('antialiasing', true);
 	}
 
 	public function addAnim(name:String, prefix:String, looped:Bool, offset:FlxPoint)

@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxG;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -7,6 +8,8 @@ import flixel.tweens.FlxTween;
 class MenuButton extends CCSprite
 {
 	public var button:String;
+
+	public var ogX:Float = FlxG.width / 2;
 
 	override public function new(x:Float, y:Float, buttonn:String)
 	{
@@ -16,6 +19,12 @@ class MenuButton extends CCSprite
 		addAnim('play', 'play button', true, new FlxPoint(0, 4)); // new FlxPoint(-100, 4));
 		addAnim('options', 'options', true, new FlxPoint(0, 5)); // new FlxPoint(-158, 5));
 		playAnim(button, true);
+		this.antialiasing = ClientSettings.getBoolByString('antialiasing', true);
+	}
+
+	public function setOgX()
+	{
+		ogX = this.x;
 	}
 
 	public var oldTween:FlxTween;

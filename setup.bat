@@ -73,6 +73,9 @@ haxelib update openfl
 haxelib update flixel
 haxelib update flixel-tools
 
+:: custom libraries
+haxelib git flxanimate https://github.com/Dot-Stuff/flxanimate
+
 echo Press any key to continue.
 pause>nul
 goto FinishLibraries

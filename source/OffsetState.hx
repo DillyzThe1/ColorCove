@@ -14,10 +14,11 @@ class OffsetState extends FlxState
 	public var debugSpr:CCSprite;
 
 	// edit these; ghost is the bg, debug is the sprite you're offsetting
-	public var ghostAnim:String = "static";
+	public var ghostAnim:String = "phil warning";
 	public var debugIndex:Int = 1;
 
-	public static var debugAnims:Array<String> = ['static', 'press', 'revive', 'die'];
+	// DO NOT EDIT THIS ANYMORE IT'S AUTOMATIC
+	public static var debugAnims:Array<String> = ['static', 'moving'];
 
 	public var debugAnim:String = debugAnims[1];
 
@@ -28,12 +29,16 @@ class OffsetState extends FlxState
 	public function getSpr(?x:Float = 0, ?y:Float = 0)
 	{
 		// feel free to edit the animations as you need
-		var newSpr = new CCSprite(x, y, 'Options Arrows');
-		newSpr.addAnim('static', 'Option Arrow Static0', false, new FlxPoint(0, 0));
-		newSpr.addAnim('press', 'Option Arrow Press0', false, new FlxPoint(42, 0));
-		newSpr.addAnim('revive', 'Option Arrow Revive0', false, new FlxPoint(0, 0));
-		newSpr.addAnim('die', 'Option Arrow Die0', false, new FlxPoint(0, 0));
-		newSpr.flipX = true;
+		var newSpr = new CCSprite(0, 0, 'Options Icons');
+		newSpr.addAnim('sound', 'OI Sound', false, new FlxPoint(0, 0));
+		newSpr.addAnim('headphones', 'OI Headphones', false, new FlxPoint(-15, -11));
+		newSpr.addAnim('rotation', 'OI Rot', false, new FlxPoint(-21, -6));
+		newSpr.addAnim('camera', 'OI Camera', false, new FlxPoint(-24, -14));
+		newSpr.addAnim('zoom', 'OI Zoom', false, new FlxPoint(-14, -11));
+		newSpr.addAnim('quality', 'OI quality', false, new FlxPoint(-14, -14));
+		newSpr.addAnim('pause blur', 'OI Pause Blur', false, new FlxPoint(-12, -20));
+		newSpr.addAnim('phil warning', 'OI Phil Warning', false, new FlxPoint(-15, -22));
+		newSpr.addAnim('nicholas hint', 'OI Nicholas Hint', false, new FlxPoint(-15, -23));
 		return newSpr;
 	}
 
@@ -48,6 +53,9 @@ class OffsetState extends FlxState
 		debugSprBG.screenCenter();
 		debugSprBG.alpha = 0.5;
 
+		debugAnims = debugSprBG.animation.getNameList();
+		debugAnim = debugAnims[0];
+
 		debugSpr = getSpr(debugSprBG.x, debugSprBG.y);
 
 		add(debugSprBG);
@@ -60,13 +68,15 @@ class OffsetState extends FlxState
 
 		debugText = new FlxText(20, 20, 0, '[?, ?]', 32, true);
 		debugText.setFormat(Paths.font('FredokaOne-Regular'), 32, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, true);
-		debugText.antialiasing = ClientSettings.antialiasing;
+		debugText.antialiasing = ClientSettings.getBoolByString('antialiasing', true);
 		add(debugText);
 	}
 
 	override public function update(e:Float)
 	{
 		super.update(e);
+
+		debugSpr.setPosition(debugSprBG.x, debugSprBG.y);
 
 		var jp = FlxG.keys.justPressed;
 		var amount = FlxG.keys.pressed.SHIFT ? 10 : 1;

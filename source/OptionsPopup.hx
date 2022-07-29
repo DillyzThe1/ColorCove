@@ -54,24 +54,43 @@ class OptionsPopup extends FlxSpriteGroup
 		return optGen('int', it, on, false, 0, id);
 	}
 
-	var categories:Array<Dynamic> = [
+	public static var categories:Array<Array<Dynamic>> = [
 		// a
 		[
 			'Volume',
-			[
-				optInt('headphones', 'Music Volume', Std.int(ClientSettings.musicVolume * 100)),
-				optInt('sound', 'Sound Volume', Std.int(ClientSettings.soundVolume * 100))
-			]
+			[optInt('headphones', 'Music Volume', 25), optInt('sound', 'Sound Volume', 100)]
 		],
 		[
 			'Cameras',
 			[
-				optBool('camera', 'Cam. Movement', ClientSettings.cameraMovement),
-				optFloat('zoom', 'Cam. Zooming', ClientSettings.camZooming),
-				optFloat('rotation', 'Cam. Rotation', ClientSettings.camRotation)
+				optBool('camera', 'Cam. Movement', true),
+				optFloat('zoom', 'Cam. Zooming', 1.0),
+				optFloat('rotation', 'Cam. Rotation', 1.0)
 			]
 		],
-		['Visuals', [optBool('quality', 'Antialiasing', ClientSettings.antialiasing)]]
+		[
+			'Visuals',
+			[
+				optBool('quality', 'Antialiasing', true),
+				optBool('pause blur', 'Pause Menu Blur', true)
+			]
+		],
+		[
+			'Gameplay',
+			[
+				optBool('nicholas hint', 'Show Tutorial', true),
+				optBool('nicholas hint', 'Auto Pause', true)
+			]
+		],
+		[
+			'Shaders',
+			[
+				optBool('phil warning', 'Phil Warning Shader', true),
+				#if !DISABLE_NICHOLAS_SHADER
+				optBool('nicholas hint', 'Nicholas Hint Shader', true)
+				#end
+			]
+		],
 	];
 
 	var bg:CCSprite;
@@ -122,7 +141,7 @@ class OptionsPopup extends FlxSpriteGroup
 		tabText = new FlxText(0, 0, 0, 'Tab 1', Std.int(16 * textScale), true);
 		tabText.setFormat(Paths.font('FredokaOne-Regular'), Std.int(16 * textScale), FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE,
 			FlxColor.BLACK, true);
-		tabText.antialiasing = ClientSettings.antialiasing;
+		tabText.antialiasing = ClientSettings.getBoolByString('antialising', true);
 		add(tabText);
 
 		add(optionArray);
@@ -150,7 +169,7 @@ class OptionsPopup extends FlxSpriteGroup
 
 		tabIndex += tabChange;
 
-		FlxG.sound.play(Paths.sound('click lol'), ClientSettings.soundVolume * 1.1);
+		FlxG.sound.play(Paths.sound('click lol'), (ClientSettings.getIntByString('soundVolume', 100) / 100) * 1.1);
 
 		/*if (tabIndex < 0)
 				tabIndex = categories.length - 1;
@@ -201,15 +220,15 @@ class OptionsPopup extends FlxSpriteGroup
 			{
 				case 'bool':
 					var bOption = new BoolOption(pos, obj.optionName, obj.iconType,
-						ClientSettings.getBoolByString(obj.optionName.toLowerCase().replace(' ', '')));
+						ClientSettings.getBoolByString(obj.optionName.toLowerCase().replace(' ', ''), obj.boolDefault));
 					option = bOption;
 				case 'float':
 					var fOption = new FloatOption(pos, obj.optionName, obj.iconType,
-						ClientSettings.getFloatByString(obj.optionName.toLowerCase().replace(' ', '')), 0.1, 0, 1.5);
+						ClientSettings.getFloatByString(obj.optionName.toLowerCase().replace(' ', ''), obj.floatDefault), 0.1, 0, 1.5);
 					option = fOption;
 				case 'int':
 					var iOption = new IntOption(pos, obj.optionName, obj.iconType,
-						ClientSettings.getIntByString(obj.optionName.toLowerCase().replace(' ', '')), 5, 0, 150);
+						ClientSettings.getIntByString(obj.optionName.toLowerCase().replace(' ', ''), obj.intDefault), 5, 0, 150);
 					option = iOption;
 				default:
 					option = new Option(pos, obj.optionName, obj.iconType);
@@ -254,21 +273,14 @@ class OptionsPopup extends FlxSpriteGroup
 
 		if (FlxG.keys.justPressed.R)
 		{
-			// Volume
-			ClientSettings.soundVolume = 1;
-			ClientSettings.musicVolume = 0.25;
-			// Cameras
-			ClientSettings.cameraMovement = true;
-			ClientSettings.camZooming = 1.0;
-			ClientSettings.camRotation = 1.0;
-			// Visuals
-			ClientSettings.antialiasing = true;
-
 			// settings new vars
-			ClientSettings.setData();
+			ClientSettings.wipeData();
 			// displaying new vars
 			for (i in optionArray)
+			{
+				i.resetToDefault();
 				i.updateDisplay();
+			}
 		}
 	}
 }
@@ -301,6 +313,9 @@ class Option extends FlxSpriteGroup
 		this.icon.addAnim('camera', 'OI Camera', false, new FlxPoint(-24, -14));
 		this.icon.addAnim('zoom', 'OI Zoom', false, new FlxPoint(-14, -11));
 		this.icon.addAnim('quality', 'OI quality', false, new FlxPoint(-24, -14));
+		this.icon.addAnim('pause blur', 'OI Pause Blur', false, new FlxPoint(-13, -19));
+		this.icon.addAnim('phil warning', 'OI Phil Warning', false, new FlxPoint(-25, -12));
+		this.icon.addAnim('nicholas hint', 'OI Nicholas Hint', false, new FlxPoint(-15, -23));
 		this.icon.playAnim(optionIcon, true);
 
 		var textScale = 2.5;
@@ -321,7 +336,7 @@ class Option extends FlxSpriteGroup
 
 		this.text.x += 40;
 
-		this.icon.antialiasing = this.text.antialiasing = this.button.antialiasing = ClientSettings.antialiasing;
+		this.icon.antialiasing = this.text.antialiasing = this.button.antialiasing = ClientSettings.getBoolByString('antialising', true);
 
 		add(this.text);
 		add(this.icon);
@@ -347,10 +362,16 @@ class Option extends FlxSpriteGroup
 	{
 		throw new NotImplementedException("Override the clickThing() function.");
 	}
+
+	public function resetToDefault()
+	{
+		throw new NotImplementedException("Override the resetToDefault() function.");
+	}
 }
 
 class BoolOption extends Option
 {
+	public var defValue:Bool = false;
 	public var realValue:Bool = false;
 
 	override public function new(y:Float, optionText:String, optionIcon:String, defaultValue:Bool)
@@ -359,12 +380,13 @@ class BoolOption extends Option
 		this.type = OptionType.Boolean;
 		this.button.playAnim('bool $defaultValue', true);
 		realValue = defaultValue;
+		defValue = defaultValue;
 	}
 
 	override public function setupHitbox()
 	{
 		hitbox = new FlxSprite(this.button.x + 10, 2).makeGraphic(90, 60, FlxColor.RED);
-		hitbox.antialiasing = ClientSettings.antialiasing;
+		hitbox.antialiasing = ClientSettings.getBoolByString('antialising', true);
 	}
 
 	override public function updateDisplay()
@@ -378,6 +400,11 @@ class BoolOption extends Option
 		realValue = !realValue;
 		updateDisplay();
 	}
+
+	override public function resetToDefault()
+	{
+		realValue = defValue;
+	}
 }
 
 class IntOption extends Option
@@ -390,6 +417,8 @@ class IntOption extends Option
 	public var upBy:Int;
 	public var bruhHitbox:FlxSprite;
 	public var iAmPissedOff:FlxText;
+
+	public var defValue:Int;
 
 	override public function new(y:Float, optionText:String, optionIcon:String, defaultValue:Int, upBy:Int, min:Int, max:Int)
 	{
@@ -409,7 +438,8 @@ class IntOption extends Option
 		this.iAmPissedOff.setFormat(Paths.font('FredokaOne-Regular'), Std.int(16 * textScale), FlxColor.WHITE, FlxTextAlign.CENTER,
 			FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, true);
 		add(this.iAmPissedOff);
-		this.iAmPissedOff.antialiasing = ClientSettings.antialiasing;
+		this.iAmPissedOff.antialiasing = ClientSettings.getBoolByString('antialiasing', true);
+		defValue = defaultValue;
 	}
 
 	override public function update(e:Float)
@@ -421,7 +451,7 @@ class IntOption extends Option
 	override public function setupHitbox()
 	{
 		hitbox = new FlxSprite(this.button.x, 0).makeGraphic(180, 70, FlxColor.GREEN);
-		hitbox.antialiasing = ClientSettings.antialiasing;
+		hitbox.antialiasing = ClientSettings.getBoolByString('antialiasing', true);
 	}
 
 	override public function updateDisplay()
@@ -444,6 +474,11 @@ class IntOption extends Option
 			realValue = minValue;
 		updateDisplay();
 	}
+
+	override public function resetToDefault()
+	{
+		realValue = defValue;
+	}
 }
 
 class FloatOption extends Option
@@ -456,6 +491,8 @@ class FloatOption extends Option
 	public var upBy:Float;
 	public var bruhHitbox:FlxSprite;
 	public var iAmPissedOff:FlxText;
+
+	public var defValue:Float;
 
 	override public function new(y:Float, optionText:String, optionIcon:String, defaultValue:Float, upBy:Float, min:Float, max:Float)
 	{
@@ -475,7 +512,8 @@ class FloatOption extends Option
 		this.iAmPissedOff.setFormat(Paths.font('FredokaOne-Regular'), Std.int(16 * textScale), FlxColor.WHITE, FlxTextAlign.CENTER,
 			FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, true);
 		add(this.iAmPissedOff);
-		this.iAmPissedOff.antialiasing = ClientSettings.antialiasing;
+		this.iAmPissedOff.antialiasing = ClientSettings.getBoolByString('antialising', true);
+		defValue = defaultValue;
 	}
 
 	override public function update(e:Float)
@@ -487,7 +525,7 @@ class FloatOption extends Option
 	override public function setupHitbox()
 	{
 		hitbox = new FlxSprite(this.button.x, 0).makeGraphic(180, 70, FlxColor.GREEN);
-		hitbox.antialiasing = ClientSettings.antialiasing;
+		hitbox.antialiasing = ClientSettings.getBoolByString('antialising', true);
 	}
 
 	override public function updateDisplay()
@@ -509,5 +547,10 @@ class FloatOption extends Option
 		else if (realValue <= minValue)
 			realValue = minValue;
 		updateDisplay();
+	}
+
+	override public function resetToDefault()
+	{
+		realValue = defValue;
 	}
 }

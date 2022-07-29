@@ -17,7 +17,7 @@ class SongHandler
 			lastSongName = music;
 			FlxG.sound.playMusic(Paths.music(music));
 			FlxG.sound.music.looped = true;
-			FlxG.sound.music.volume = ClientSettings.musicVolume * soundMultiplier;
+			FlxG.sound.music.volume = (ClientSettings.getIntByString('musicvolume', 100) / 100) * soundMultiplier;
 			setBPM(bpm);
 		}
 	}
@@ -35,7 +35,7 @@ class SongHandler
 
 	public function playSound(sound:String, ?soundMultiplier:Float = 1)
 	{
-		var newSound:FlxSound = FlxG.sound.load(Paths.sound(sound), ClientSettings.soundVolume * soundMultiplier);
+		var newSound:FlxSound = FlxG.sound.load(Paths.sound(sound), (ClientSettings.getIntByString('soundvolume', 100) / 100) * soundMultiplier);
 
 		/*newSound.onComplete = function()
 			{

@@ -16,7 +16,7 @@ class IncompatibiltyWarningState extends FlxState
 		warningText = new FlxText(20, 20 + (20 * textScale) * 2, 0, 'w', Std.int(16 * textScale), true);
 		warningText.setFormat(Paths.font('FredokaOne-Regular'), Std.int(16 * textScale), FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE,
 			FlxColor.BLACK, true);
-		warningText.antialiasing = ClientSettings.antialiasing;
+		warningText.antialiasing = ClientSettings.getBoolByString('antialiasing', true);
 
 		add(warningText);
 

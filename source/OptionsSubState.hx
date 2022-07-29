@@ -35,7 +35,10 @@ class OptionsSubState extends FlxSubState
 		{
 			ClientSettings.setData();
 			FlxG.cameras.remove(bruhCam);
-			FlxG.switchState(new MenuState());
+			// FlxG.switchState(new MenuState());
+			newPopup.destroy();
+			MenuState.instance.restoreButtons();
+			MenuState.instance.closeSubState();
 		};
 	}
 

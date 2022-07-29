@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.math.FlxPoint;
@@ -13,6 +14,8 @@ import haxe.Http;
 
 class MenuState extends FlxState
 {
+	public static var instance:MenuState;
+
 	public var menuTitle:MenuButton;
 	public var menuPlay:MenuButton;
 	public var menuOptions:MenuButton;
@@ -23,8 +26,12 @@ class MenuState extends FlxState
 
 	public static var checkedVersion:Bool = false;
 
+	public var camFollow:FlxObject;
+	public var followPoint:FlxPoint;
+
 	override public function create()
 	{
+		instance = this;
 		super.create();
 
 		ClientSettings.retrieveData();
@@ -32,6 +39,10 @@ class MenuState extends FlxState
 		camGame.zoom = 1;
 		FlxG.cameras.reset(camGame);
 		camGame.bgColor = FlxColor.fromString("#99CCFF");
+
+		followPoint = new FlxPoint(FlxG.width / 2, FlxG.height / 2);
+		camFollow = new FlxObject();
+		camGame.follow(camFollow, LOCKON, 0.03 / (FlxG.updateFramerate / 120));
 
 		var menuSky = new FlxSprite(0, 0).loadGraphic(Paths.image('Sky'));
 		var menuHill = new FlxSprite(0, 500).loadGraphic(Paths.image('Hill'));
@@ -69,13 +80,19 @@ class MenuState extends FlxState
 		menuTitle.x += -menuOff;
 		signPost.x += 43;
 
-		menuSky.antialiasing = menuHill.antialiasing = signPost.antialiasing = ClientSettings.antialiasing;
+		menuTitle.setOgX();
+		menuPlay.setOgX();
+		menuOptions.setOgX();
+
+		menuSky.antialiasing = menuHill.antialiasing = signPost.antialiasing = ClientSettings.getBoolByString('antialiasing', true);
 
 		if (fredTrolling >= 10)
 		{
 			musicBox.playSound('OW MY EARS', 1.25);
 			menuTitle.playAnim('fred 3am', true);
 		}
+
+		FlxG.autoPause = ClientSettings.getBoolByString('autopause', true);
 
 		if (!checkedVersion)
 		{
@@ -121,41 +138,71 @@ class MenuState extends FlxState
 
 	public static var fredTrolling:Int = 0;
 
+	var totalElapsed:Float = 0;
+
 	override public function update(elapsed:Float)
 	{
+		totalElapsed += elapsed;
 		super.update(elapsed);
 		musicBox.update();
 		menuPlay.angle = -menuTitle.angle / 2;
 		menuOptions.angle = menuTitle.angle / 2;
 
-		menuPlay.updateSize(FlxG.mouse.overlaps(menuPlay));
-		menuOptions.updateSize(FlxG.mouse.overlaps(menuOptions));
+		camFollow.setPosition(followPoint.x + Math.cos(totalElapsed * 0.325) * 2.5, followPoint.y + Math.sin(totalElapsed * 0.65) * 7.5);
 
-		if (FlxG.mouse.justPressed && !shutup)
-			if (menuPlay.oldHovering)
-				doPress(menuPlay);
-			else if (menuOptions.oldHovering)
-				doPress(menuOptions);
-			else if (FlxG.mouse.overlaps(menuTitle))
-			{
-				if (fredTrolling == 10)
+		if (!shutup)
+		{
+			menuPlay.updateSize(FlxG.mouse.overlaps(menuPlay));
+			menuOptions.updateSize(FlxG.mouse.overlaps(menuOptions));
+
+			if (FlxG.mouse.justPressed && !shutup)
+				if (menuPlay.oldHovering)
+					doPress(menuPlay);
+				else if (menuOptions.oldHovering)
+					doPress(menuOptions);
+				else if (FlxG.mouse.overlaps(menuTitle))
 				{
-					musicBox.playSound('OW MY EARS', 1.25);
-					menuTitle.playAnim('fred 3am', true);
-					FlxG.mouse.load(Paths.image('fred'), 0.1, -25, -25);
-					fredTrolling = 20;
+					if (fredTrolling == 10)
+					{
+						musicBox.playSound('OW MY EARS', 1.25);
+						menuTitle.playAnim('fred 3am', true);
+						FlxG.mouse.load(Paths.image('fred'), 0.1, -25, -25);
+						fredTrolling = 20;
+					}
+					else if (fredTrolling < 10)
+					{
+						fredTrolling++;
+						musicBox.playSound('le tap', 1);
+					}
 				}
-				else if (fredTrolling < 10)
-				{
-					fredTrolling++;
-					musicBox.playSound('le tap', 1);
-				}
-			}
+		}
 
 		#if debug
 		if (FlxG.keys.justPressed.NINE)
 			doPress(null);
 		#end
+	}
+
+	public function restoreButtons()
+	{
+		if (!shutup)
+			return;
+		shutup = false;
+
+		camGame.destroy();
+		var oldZoom:Float = camGame.zoom;
+		camGame = new FlxCamera();
+		camGame.zoom = oldZoom;
+		FlxG.cameras.reset(camGame);
+		camGame.bgColor = FlxColor.fromString("#99CCFF");
+		camGame.follow(camFollow, LOCKON, 0.03 / (FlxG.updateFramerate / 120));
+
+		followPoint.y = FlxG.height / 2;
+		FlxTween.tween(camGame, {zoom: 1}, 0.75, {ease: FlxEase.cubeInOut});
+		FlxTween.tween(menuTitle, {x: menuTitle.ogX}, 1.25, {ease: FlxEase.cubeOut});
+		FlxTween.tween(menuPlay, {x: menuPlay.ogX}, 1.25, {ease: FlxEase.cubeOut});
+		FlxTween.tween(menuOptions, {x: menuOptions.ogX}, 1.25, {ease: FlxEase.cubeOut});
+		// camGame.flash(FlxColor.WHITE, 0.75, null, true);
 	}
 
 	public function doPress(button:MenuButton)
@@ -174,12 +221,13 @@ class MenuState extends FlxState
 		sound.persist = false;
 
 		var the:FlxTimer = new FlxTimer();
-		the.start(3.5, function(time:FlxTimer)
+		the.start(1.75, function(time:FlxTimer)
 		{
 			if (button == menuPlay)
 				FlxG.switchState(new PlayState());
 			else if (button == menuOptions)
 			{
+				followPoint.y = (FlxG.height / 2) + 375;
 				openSubState(new OptionsSubState());
 			}
 			#if debug

@@ -12,7 +12,7 @@ class PopupText extends FlxText
 		super(0, 0, 0, '+0', 48, true);
 		setFormat(Paths.font('FredokaOne-Regular'), 48, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.WHITE, true);
 		borderSize = 4;
-		antialiasing = ClientSettings.antialiasing;
+		antialiasing = ClientSettings.getBoolByString('antialiasing', true);
 	}
 
 	public function resetText(newX:Float, newY:Float, score:Int)
