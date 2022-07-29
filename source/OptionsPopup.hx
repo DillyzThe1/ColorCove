@@ -267,7 +267,8 @@ class OptionsPopup extends FlxSpriteGroup
 			else if (FlxG.mouse.overlaps(exitButton))
 			{
 				exitButton.playAnim('hit', true);
-				exitFunc();
+				if (exitFunc != null)
+					exitFunc();
 			}
 		}
 

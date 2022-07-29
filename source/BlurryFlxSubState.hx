@@ -10,7 +10,8 @@ import openfl.filters.BlurFilter;
 
 class BlurryFlxSubState extends FlxSubState
 {
-	public var blurThingEnabled:Bool;
+	public static var blurThingEnabled:Bool;
+
 	public var oldCamFilters:Array<BitmapFilter>;
 
 	public var blurFilter:BlurFilter;
@@ -21,7 +22,6 @@ class BlurryFlxSubState extends FlxSubState
 	{
 		super.create();
 
-		blurThingEnabled = ClientSettings.getBoolByString('pausemenublur', true);
 		if (blurThingEnabled)
 		{
 			oldCamFilters = CCUtil.getCameraFilters(FlxG.camera);

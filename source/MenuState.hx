@@ -40,6 +40,8 @@ class MenuState extends FlxState
 		FlxG.cameras.reset(camGame);
 		camGame.bgColor = FlxColor.fromString("#99CCFF");
 
+		BlurryFlxSubState.blurThingEnabled = ClientSettings.getBoolByString('pausemenublur', true);
+
 		followPoint = new FlxPoint(FlxG.width / 2, FlxG.height / 2);
 		camFollow = new FlxObject();
 		camGame.follow(camFollow, LOCKON, 0.03 / (FlxG.updateFramerate / 120));
