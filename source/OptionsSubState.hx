@@ -8,11 +8,13 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 
-class OptionsSubState extends FlxSubState
+class OptionsSubState extends BlurryFlxSubState
 {
 	public var bruhCam:FlxCamera;
 
 	var newPopup:OptionsPopup;
+
+	var stopSpammingNerd:Bool = false;
 
 	override public function create()
 	{
@@ -33,19 +35,27 @@ class OptionsSubState extends FlxSubState
 		add(newPopup);
 		newPopup.exitFunc = function()
 		{
-			ClientSettings.setData();
-			FlxG.cameras.remove(bruhCam);
-			// FlxG.switchState(new MenuState());
-			newPopup.destroy();
-			MenuState.instance.restoreButtons();
-			MenuState.instance.closeSubState();
+			// "please stop spamming it's gonna break the game!!" 🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓
+			stopSpammingNerd = true;
+			onEndBlurOut = function()
+			{
+				endBlurEffects();
+				ClientSettings.setData();
+				FlxG.cameras.remove(bruhCam);
+				newPopup.destroy();
+				// FlxG.switchState(new MenuState());
+				MenuState.instance.restoreButtons();
+				MenuState.instance.closeSubState();
+			};
+			tweenOutBlur();
+			FlxTween.tween(bruhCam, {alpha: 0}, 0.65, {ease: FlxEase.cubeOut});
 		};
 	}
 
 	override public function update(e:Float)
 	{
 		super.update(e);
-		if (FlxG.keys.justPressed.ESCAPE)
+		if (FlxG.keys.justPressed.ESCAPE && !stopSpammingNerd)
 			newPopup.exitFunc();
 	}
 }

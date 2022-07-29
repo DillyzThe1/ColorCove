@@ -1,5 +1,6 @@
 package shaders;
 
+#if !web
 import flixel.system.FlxAssets.FlxShader;
 
 class PhilTestShader extends FlxShader
@@ -29,3 +30,4 @@ class PhilTestShader extends FlxShader
 		super();
 	}
 }
+#end

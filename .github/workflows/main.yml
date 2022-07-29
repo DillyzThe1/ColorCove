@@ -49,6 +49,8 @@ jobs:
           haxelib update flixel-tools
           haxelib update hxcpp-debug-server
           
+          haxelib git flxanimate https://github.com/Dot-Stuff/flxanimate
+
           haxelib list
         shell: cmd
       - name: Build Game

@@ -70,7 +70,11 @@ class TutorialSubState extends BlurryFlxSubState
 	override public function update(e:Float)
 	{
 		super.update(e);
-		if (!stopSpammingNerd && #if debug !FlxG.keys.justPressed.BACKSLASH && #end (FlxG.keys.justPressed.ANY || FlxG.mouse.justPressed))
+		if (!stopSpammingNerd
+			&& !FlxG.keys.justPressed.MINUS
+			&& !FlxG.keys.justPressed.PLUS
+			&& #if debug !FlxG.keys.justPressed.BACKSLASH
+			&& #end (FlxG.keys.justPressed.ANY || FlxG.mouse.justPressed))
 		{
 			// "please stop spamming it's gonna break the game!!" 🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓🤓
 			stopSpammingNerd = true;

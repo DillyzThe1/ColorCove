@@ -10,6 +10,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 
 class OutdatedSubState extends BlurryFlxSubState
 {
@@ -78,8 +79,8 @@ class OutdatedSubState extends BlurryFlxSubState
 				// FlxG.switchState(new MenuState());
 				MenuState.instance.closeSubState();
 			};
-			tweenOutBlur();
 			FlxTween.tween(bruhCam, {alpha: 0}, 0.65, {ease: FlxEase.cubeOut});
+			tweenOutBlur();
 		};
 	}
 
