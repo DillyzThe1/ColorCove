@@ -51,11 +51,6 @@ jobs:
           
           haxelib list
         shell: cmd
-
-        # yes i took this line from the fnf thing shut up
-      - name: New Tag
-        run: echo "${{github_run_id}}" > VERSION
-      # back to things i understand
       - name: Build Game
         run: lime test windows -release
       - name: Create Artifact
