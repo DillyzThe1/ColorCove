@@ -44,7 +44,8 @@ class BlurryFlxSubState extends FlxSubState
 			var the:FlxTimer = new FlxTimer();
 			the.start(0.75, function(time:FlxTimer)
 			{
-				onEndBlurOut();
+				if (onEndBlurOut != null)
+					onEndBlurOut();
 			}, 1);
 			return;
 		}
