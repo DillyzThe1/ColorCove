@@ -26,7 +26,7 @@
 - <s>The passive characters (canonically named Nicholas) now have their alpha lowered when closer to the mouse using a GLSL shader.</s>
 	- <b>Canceled due to complications.</b>
 - Two new compiler flags that had to do with shader testing & scrapped features.
-	- Please refer to [Project.xml lines 84-87](https://github.com/DillyzThe1/ColorCove/blob/0.5.0/Project.xml#L84) for the new compiler flags.
+	- Please refer to [Project.xml lines 96-98](https://github.com/DillyzThe1/ColorCove/blob/main/Project.xml#L96) for the new compiler flags.
 - You can now report bugs from the outdated sub state.
 	- This links you to submit an issue on Github, which is different from PauseSubState.
 - A toggle-able tutorial now pops up when entering PlayState. (Also, it's different between HTML5 and desktop builds.)

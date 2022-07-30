@@ -26,13 +26,28 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+
+      # allows me to rehash the haxelib installations
+      - name: Setup Cache
+        id: haxe-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            C:/haxelib
+            export/release/windows/haxe
+            export/release/windows/obj
+          key: ${{ runner.os }}-haxelib-${{ hashFiles('**/Project.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-haxelib-
       
+      # setup haxeflixel for compilation
       - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.2.4
 
-      # Runs a single command using the runners shell
+      # installs libraries
       - name: Haxeflixel Libraries Installer
+        if: steps.haxe-cache.outputs.cache-hit != 'true'
         run: |
           haxelib setup C:/haxelib
           haxelib install hxcpp > nul
@@ -42,19 +57,29 @@ jobs:
           haxelib install flixel
           haxelib run lime setup flixel
           haxelib install hxcpp-debug-server
-          haxelib update hxcpp
-          haxelib update lime
-          haxelib update openfl
-          haxelib update flixel
-          haxelib update flixel-tools
-          haxelib update hxcpp-debug-server
-          
           haxelib git flxanimate https://github.com/Dot-Stuff/flxanimate
-
-          haxelib list
         shell: cmd
+
+      # updated haxelib and flxanimate
+      - name: Haxeflixel Libraries Updater
+        run: |
+            haxelib update hxcpp
+            haxelib update lime
+            haxelib update openfl
+            haxelib update flixel
+            haxelib update flixel-tools
+            haxelib update hxcpp-debug-server
+            
+            haxelib git flxanimate https://github.com/Dot-Stuff/flxanimate
+
+            haxelib list
+        shell: cmd
+
+      # build the game WITHOUT OPENING IT (srsly github dont allow people to just open exes like that lol)
       - name: Build Game
         run: haxelib run lime build windows -release
+
+      # upload the new thing for download
       - name: Create Artifact
         uses: actions/upload-artifact@v3
         with:
