@@ -127,7 +127,6 @@ jobs:
           haxelib run lime setup flixel
           haxelib install hxcpp-debug-server
           haxelib git flxanimate https://github.com/Dot-Stuff/flxanimate
-        shell: cmd
 
       # update haxelib libraries
       - name: Haxeflixel Libraries Updater
@@ -142,7 +141,6 @@ jobs:
             haxelib git flxanimate https://github.com/Dot-Stuff/flxanimate
 
             haxelib list
-        shell: cmd
 
       # build the game WITHOUT OPENING IT (srsly github dont allow people to just open exes like that lol)
       - name: Build Game
@@ -196,7 +194,6 @@ jobs:
           haxelib run lime setup flixel
           haxelib install hxcpp-debug-server
           haxelib git flxanimate https://github.com/Dot-Stuff/flxanimate
-        shell: cmd
 
       # update haxelib libraries
       - name: Haxeflixel Libraries Updater
@@ -211,7 +208,6 @@ jobs:
             haxelib git flxanimate https://github.com/Dot-Stuff/flxanimate
 
             haxelib list
-        shell: cmd
 
       # build the game WITHOUT OPENING IT (srsly github dont allow people to just open exes like that lol)
       - name: Build Game
