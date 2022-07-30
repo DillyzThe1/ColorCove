@@ -20,7 +20,7 @@ class IncompatibiltyWarningState extends FlxState
 
 		add(warningText);
 
-		warningText.text = 'Warning!\nThis game is meant for a windows desktop!\n\n${FlxG.onMobile ? 'Mobile web builds have a few known bugs,\nbut please report them on github!' : 'Web builds may have unknown bugs as of now,\nso please report them on github!'}\n\nhttps://www.github.com/DillyzThe1/ColorCove/\n';
+		warningText.text = 'Warning!\nThis game is meant for a desktop platform!\n\n${FlxG.onMobile ? 'Mobile web builds have a few known bugs,\nbut please report them on github!' : 'Web builds may have unknown bugs as of now,\nso please report them on github!'}\n\nhttps://www.github.com/DillyzThe1/ColorCove/\n';
 		warningText.screenCenter();
 	}
 
