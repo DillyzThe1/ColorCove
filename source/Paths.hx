@@ -58,6 +58,7 @@ class HiddenPaths
 
 	inline public static function asset(file:String)
 	{
+		// pls work
 		return 'assetsHidden/$file';
 	}
 

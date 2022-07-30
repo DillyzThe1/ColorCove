@@ -105,6 +105,8 @@ class MenuState extends FlxState
 
 			dataRequest.onData = function(data:String)
 			{
+				OutdatedSubState.updateBuild();
+
 				trace('Data returned to socket! Data: $data');
 				// build num ; build vers ; build name
 				dataReturned = data.split(';');

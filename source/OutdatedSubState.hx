@@ -12,6 +12,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import lime.utils.Assets;
 
 class OutdatedSubState extends BlurryFlxSubState
 {
@@ -33,6 +34,12 @@ class OutdatedSubState extends BlurryFlxSubState
 
 	var bruhCam:FlxCamera;
 
+	public static function updateBuild()
+	{
+		curBuildNum = Std.parseInt(Assets.getText(HiddenPaths.txt('buildNum')));
+		trace(curBuildNum);
+	}
+
 	override public function create()
 	{
 		super.create();
@@ -50,8 +57,6 @@ class OutdatedSubState extends BlurryFlxSubState
 		warningText.setFormat(Paths.font('FredokaOne-Regular'), Std.int(16 * textScale), FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE,
 			FlxColor.BLACK, true);
 		warningText.antialiasing = ClientSettings.getBoolByString('antialiasing', true);
-
-		curBuildNum = Std.parseInt(HiddenPaths.txt('cur build'));
 
 		if (curBuildNum == 0)
 			warningText.text = 'Warning!\n\n'

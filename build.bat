@@ -1,4 +1,5 @@
 @echo off
+
 title ColorCove - Build Screen
 set /p menu="Build game? [Y/N/C]"
        if %menu%==Y goto BuildGame
@@ -25,6 +26,7 @@ set /p menu="Build debug? [Y/N/C]"
 cls
 title ColorCove - Building Debug
 echo Compiling, please wait...
+call buildUpdate.bat
 lime test windows -debug
 echo.
 echo Debug build complete.
@@ -42,6 +44,7 @@ exit
 cls
 title ColorCove - Building
 echo Compiling, please wait...
+call buildUpdate.bat
 lime test windows -release
 echo.
 echo Release build complete.

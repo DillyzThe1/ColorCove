@@ -36,3 +36,4 @@
 - A toggle-able tutorial now pops up when entering PlayState. (Also, it's different between HTML5 and desktop builds.)
 - The outdated menu actually closes rather than reloading the main menu.
 - Updated Adobe Animate project file. (Additions: Icons for options & the popup for PlayState.hx)
+- Replaced build ID tracker for consistency & forks.
