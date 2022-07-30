@@ -2,7 +2,7 @@
 - First release of the game
 - Includes gameplay, options, pausing, sound, music, art, etc.
 
-# 0.6.0 (Visually Enhanced Pre-Release - Build 4??)
+# 0.6.0 (Visually Enhanced Pre-Release - Build 502)
 - The options menu & it's functionality have both been fully revamped!<br> 
 	- (Modding documentation coming soon!)
 - Custom GLSL shaders (Aka shaders written in OpenGL Shader Language) are now used.
