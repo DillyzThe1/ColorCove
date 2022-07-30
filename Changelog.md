@@ -1,7 +1,3 @@
-# 0.5.0 (Game-Jam Pre-Release - Build 361)
-- First release of the game
-- Includes gameplay, options, pausing, sound, music, art, etc.
-
 # 0.6.0 (Visually Enhanced Pre-Release - Build 502)
 - The options menu & it's functionality have both been fully revamped!<br> 
 	- (Modding documentation coming soon!)
@@ -37,3 +33,7 @@
 - The outdated menu actually closes rather than reloading the main menu.
 - Updated Adobe Animate project file. (Additions: Icons for options & the popup for PlayState.hx)
 - Replaced build ID tracker for consistency & forks.
+
+# 0.5.0 (Game-Jam Pre-Release - Build 361)
+- First release of the game
+- Includes gameplay, options, pausing, sound, music, art, etc.
