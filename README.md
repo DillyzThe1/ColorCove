@@ -22,6 +22,9 @@ Your goal is to get the boring monochrome outliers to stop trying to make it bor
 For windows builds, go [here](https://github.com/DillyzThe1/ColorCove/releases) & download the zip.<br/>
 For (semi-mobile-compatible) web builds, go to [this link](https://dillyzthe1.github.io/ColorCoveWebBuild/) instead.
 
+<i>To test out latest commits and beta builds, go to [the actions page](https://github.com/DillyzThe1/ColorCove/actions) and download the latest workflow.</i><br>
+<i>It is planned to include linux and mac builds in the future.</i>
+
 You can click/tap any UI element you need, but you also have some standard controls:<br/>
 * Escape (Exiting a menu/popup)<br/>
 * Enter (Pausing)<br/>

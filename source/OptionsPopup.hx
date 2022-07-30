@@ -78,10 +78,11 @@ class OptionsPopup extends FlxSpriteGroup
 		[
 			'Gameplay',
 			[
-				optBool('nicholas hint', 'Show Tutorial', true),
-				optBool('nicholas hint', 'Auto Pause', true)
+				optBool('tutorial', 'Show Tutorial', true),
+				optBool('autopause', 'Auto Pause', true)
 			]
 		],
+		#if !web
 		[
 			'Shaders',
 			[
@@ -91,6 +92,7 @@ class OptionsPopup extends FlxSpriteGroup
 				#end
 			]
 		],
+		#end
 	];
 
 	var bg:CCSprite;
@@ -317,6 +319,8 @@ class Option extends FlxSpriteGroup
 		this.icon.addAnim('pause blur', 'OI Pause Blur', false, new FlxPoint(-13, -19));
 		this.icon.addAnim('phil warning', 'OI Phil Warning', false, new FlxPoint(-25, -12));
 		this.icon.addAnim('nicholas hint', 'OI Nicholas Hint', false, new FlxPoint(-15, -23));
+		this.icon.addAnim('tutorial', 'OI Tutorial', false, new FlxPoint(-32, -5));
+		this.icon.addAnim('autopause', 'OI zAutopause', false, new FlxPoint(-36, -12));
 		this.icon.playAnim(optionIcon, true);
 
 		var textScale = 2.5;

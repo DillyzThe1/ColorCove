@@ -41,6 +41,7 @@ class MenuState extends FlxState
 		camGame.bgColor = FlxColor.fromString("#99CCFF");
 
 		BlurryFlxSubState.blurThingEnabled = ClientSettings.getBoolByString('pausemenublur', true);
+		FlxG.autoPause = ClientSettings.getBoolByString('autopause', true);
 
 		followPoint = new FlxPoint(FlxG.width / 2, FlxG.height / 2);
 		camFollow = new FlxObject();
@@ -93,8 +94,6 @@ class MenuState extends FlxState
 			musicBox.playSound('OW MY EARS', 1.25);
 			menuTitle.playAnim('fred 3am', true);
 		}
-
-		FlxG.autoPause = ClientSettings.getBoolByString('autopause', true);
 
 		if (!checkedVersion)
 		{

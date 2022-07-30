@@ -15,7 +15,7 @@ import flixel.util.FlxSort;
 import lime.app.Application;
 import lime.graphics.Image;
 import openfl.display.BitmapData;
-#if MOUSE_SHADER_TESTING
+#if (!web && MOUSE_SHADER_TESTING)
 import shaders.MouseTrackerShader.MouseTrackerShaderManager;
 #end
 
@@ -52,7 +52,7 @@ class PlayState extends FlxState
 	public var difficulty:Float = 0.5;
 	public var score:Float = 0;
 
-	#if MOUSE_SHADER_TESTING
+	#if (!web && MOUSE_SHADER_TESTING)
 	var mouseShaderManager:MouseTrackerShaderManager;
 	#end
 
@@ -127,7 +127,7 @@ class PlayState extends FlxState
 		FlxG.cameras.add(camHUD, false);
 		camGame.bgColor = FlxColor.fromString("#99CCFF");
 
-		#if MOUSE_SHADER_TESTING
+		#if (!web && MOUSE_SHADER_TESTING)
 		mouseShaderManager = new MouseTrackerShaderManager(camGame);
 		CCUtil.setCameraFilters(camGame, [mouseShaderManager.shader]);
 		#end
@@ -250,7 +250,7 @@ class PlayState extends FlxState
 
 		totalElasped += elapsed;
 
-		#if MOUSE_SHADER_TESTING
+		#if (!web && MOUSE_SHADER_TESTING)
 		if (mouseShaderManager != null)
 			mouseShaderManager.updateShaderInfo(camGame);
 		#end
@@ -293,7 +293,9 @@ class PlayState extends FlxState
 
 		for (i in charList)
 		{
+			#if !web
 			i.shaderUpdate(elapsed, camGame, camFollow);
+			#end
 			if (FlxG.mouse.overlaps(i) && FlxG.mouse.justPressed)
 				if (i.phil && !i.philDied)
 				{

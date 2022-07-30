@@ -1,7 +1,7 @@
 package shaders;
 
 import lime.app.Application;
-#if MOUSE_SHADER_TESTING
+#if (!web && MOUSE_SHADER_TESTING)
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.system.FlxAssets.FlxShader;

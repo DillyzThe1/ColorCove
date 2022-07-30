@@ -39,6 +39,8 @@ class OffsetState extends FlxState
 		newSpr.addAnim('pause blur', 'OI Pause Blur', false, new FlxPoint(-12, -20));
 		newSpr.addAnim('phil warning', 'OI Phil Warning', false, new FlxPoint(-15, -22));
 		newSpr.addAnim('nicholas hint', 'OI Nicholas Hint', false, new FlxPoint(-15, -23));
+		newSpr.addAnim('tutorial', 'OI Tutorial', false, new FlxPoint(-26, -13));
+		newSpr.addAnim('autopause', 'OI zAutopause', false, new FlxPoint(-32, -26));
 		return newSpr;
 	}
 
