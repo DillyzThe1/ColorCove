@@ -34,6 +34,7 @@ jobs:
         with:
           path: |
             C:/haxelib
+            C:/hostedtoolcache/windows/haxe/4.2.4/
             export/release/windows/haxe
             export/release/windows/obj
           key: ${{ runner.os }}-haxelib-${{ hashFiles('**/Project.xml') }}
@@ -103,6 +104,7 @@ jobs:
         with:
           path: |
             ~/haxelib
+            ~/haxelib/opt/hostedtoolcache/haxe/4.2.4/
             export/release/linux/haxe
             export/release/linux/obj
           key: ${{ runner.os }}-haxelib-${{ hashFiles('**/Project.xml') }}
@@ -170,6 +172,7 @@ jobs:
         with:
           path: |
             ~/haxelib
+            /Users/runner/hostedtoolcache/haxe/4.2.4/
             export/release/macos/haxe
             export/release/macos/obj
           key: ${{ runner.os }}-haxelib-${{ hashFiles('**/Project.xml') }}

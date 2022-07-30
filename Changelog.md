@@ -1,3 +1,8 @@
+# 0.6.1 (More Desktop Builds - Build 503)
+- Adds a github-compiled linux build to the downloads
+- Adds a github-compiled mac build to the downloads
+- Windows builds are still compiled on my computer
+
 # 0.6.0 (Visually Enhanced Pre-Release - Build 502)
 - The options menu & it's functionality have both been fully revamped!<br> 
 	- (Modding documentation coming soon!)
