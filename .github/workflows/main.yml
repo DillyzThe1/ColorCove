@@ -45,7 +45,7 @@ jobs:
         with:
           haxe-version: 4.2.4
 
-      # installs libraries
+      # install the haxelib libraries
       - name: Haxeflixel Libraries Installer
         if: steps.haxe-cache.outputs.cache-hit != 'true'
         run: |
@@ -60,7 +60,7 @@ jobs:
           haxelib git flxanimate https://github.com/Dot-Stuff/flxanimate
         shell: cmd
 
-      # updated haxelib and flxanimate
+      # update haxelib libraries
       - name: Haxeflixel Libraries Updater
         run: |
             haxelib update hxcpp

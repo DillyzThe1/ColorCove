@@ -32,8 +32,14 @@ class ClientSettings
 
 	public static function retrieveData()
 	{
+		#if OPTIONS_DEBUGGING
+		trace('Retrieving all data...');
+		#end
 		if (globalSave == null)
 		{
+			#if OPTIONS_DEBUGGING
+			trace('Creating FlxSave "CCGlobal"...');
+			#end
 			globalSave = new FlxSave();
 			globalSave.bind("CCGlobal");
 		}
@@ -47,6 +53,9 @@ class ClientSettings
 
 	static function retrieveIntSaves()
 	{
+		#if OPTIONS_DEBUGGING
+		trace('Retrieving boolean savings...');
+		#end
 		checkForNullMaps();
 		if (globalSave.data.intMapSaves_keys != null && globalSave.data.intMapSaves_values != null)
 		{
@@ -74,6 +83,9 @@ class ClientSettings
 
 	static function retrieveFloatSaves()
 	{
+		#if OPTIONS_DEBUGGING
+		trace('Retrieving boolean savings...');
+		#end
 		checkForNullMaps();
 		if (globalSave.data.floatMapSaves_keys != null && globalSave.data.floatMapSaves_values != null)
 		{
@@ -101,6 +113,9 @@ class ClientSettings
 
 	static function retrieveBooleanSaves()
 	{
+		#if OPTIONS_DEBUGGING
+		trace('Retrieving boolean savings...');
+		#end
 		checkForNullMaps();
 		if (globalSave.data.booleanMapSaves_keys != null && globalSave.data.booleanMapSaves_values != null)
 		{
@@ -128,6 +143,10 @@ class ClientSettings
 
 	public static function setData()
 	{
+		#if OPTIONS_DEBUGGING
+		trace('Writing data to disk...');
+		#end
+
 		// integer saving
 		var intKeys:Array<String> = [];
 		var intValues:Array<Int> = [];
@@ -140,6 +159,10 @@ class ClientSettings
 
 		globalSave.data.intMapSaves_keys = intKeys;
 		globalSave.data.intMapSaves_values = intValues;
+
+		#if OPTIONS_DEBUGGING
+		trace('Wrote integer data: $intMap');
+		#end
 
 		// float saving
 		var floatKeys:Array<String> = [];
@@ -154,6 +177,10 @@ class ClientSettings
 		globalSave.data.floatMapSaves_keys = floatKeys;
 		globalSave.data.floatMapSaves_values = floatValues;
 
+		#if OPTIONS_DEBUGGING
+		trace('Wrote float data: $floatMap');
+		#end
+
 		// bool saving
 		var booleanKeys:Array<String> = [];
 		var booleanValues:Array<Bool> = [];
@@ -167,12 +194,20 @@ class ClientSettings
 		globalSave.data.booleanMapSaves_keys = booleanKeys;
 		globalSave.data.booleanMapSaves_values = booleanValues;
 
+		#if OPTIONS_DEBUGGING
+		trace('Wrote boolean data: $boolMap');
+		#end
+
 		// push saves
 		globalSave.flush();
 	}
 
 	public static function wipeData()
 	{
+		#if OPTIONS_DEBUGGING
+		trace('Wiping data...');
+		#end
+
 		globalSave.data.intMapSaves_keys = null;
 		globalSave.data.intMapSaves_values = null;
 
@@ -193,17 +228,34 @@ class ClientSettings
 	public static function checkForNullMaps()
 	{
 		if (intMap == null)
+		{
+			#if OPTIONS_DEBUGGING
+			trace('Creating integer map...');
+			#end
 			intMap = new Map<String, Int>();
+		}
 		if (floatMap == null)
+		{
+			#if OPTIONS_DEBUGGING
+			trace('Creating float map...');
+			#end
 			floatMap = new Map<String, Float>();
+		}
 		if (boolMap == null)
+		{
+			#if OPTIONS_DEBUGGING
+			trace('Creating boolean map...');
+			#end
 			boolMap = new Map<String, Bool>();
+		}
 	}
 
 	public static function updateBoolByString(str:String, value:Bool)
 	{
 		checkForNullMaps();
+		#if OPTIONS_DEBUGGING
 		trace('$str = $value');
+		#end
 
 		boolMap.set(str, value);
 
@@ -214,7 +266,9 @@ class ClientSettings
 	public static function updateIntByString(str:String, value:Int)
 	{
 		checkForNullMaps();
+		#if OPTIONS_DEBUGGING
 		trace('$str = $value');
+		#end
 
 		intMap.set(str, value);
 
@@ -225,7 +279,9 @@ class ClientSettings
 	public static function updateFloatByString(str:String, value:Float)
 	{
 		checkForNullMaps();
+		#if OPTIONS_DEBUGGING
 		trace('$str = $value');
+		#end
 
 		floatMap.set(str, value);
 	}
@@ -235,7 +291,9 @@ class ClientSettings
 		checkForNullMaps();
 		if (boolMap.exists(str))
 			return boolMap.get(str);
-		// trace('Failed to return bool save $str! Returning $def instead...');
+		#if OPTIONS_DEBUGGING
+		trace('Failed to return bool save $str! Returning $def instead...');
+		#end
 		return def;
 	}
 
@@ -244,7 +302,9 @@ class ClientSettings
 		checkForNullMaps();
 		if (intMap.exists(str))
 			return intMap.get(str);
-		// trace('Failed to return int save $str! Returning $def instead...');]
+		#if OPTIONS_DEBUGGING
+		trace('Failed to return int save $str! Returning $def instead...');
+		#end
 		return def;
 	}
 
@@ -253,7 +313,9 @@ class ClientSettings
 		checkForNullMaps();
 		if (floatMap.exists(str))
 			return floatMap.get(str);
-		// trace('Failed to return float save $str! Returning $def instead...');
+		#if OPTIONS_DEBUGGING
+		trace('Failed to return float save $str! Returning $def instead...');
+		#end
 		return def;
 	}
 }

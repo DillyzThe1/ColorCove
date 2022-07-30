@@ -91,11 +91,15 @@
 	<!-- This isn't working. The mouse won't cooperate. I hate haxeflixel collision and mouse detection. -->
 	<haxedef name="DISABLE_NICHOLAS_SHADER"/>
 
+	<!-- Enable this if you're having problems with my options system. -->
+	<!-- WARNING: Can cause MAJOR lag! This is not tested! -->
+	<haxedef name="OPTIONS_DEBUGGING"/>
+
 	<!-- _________________________________ Haxeflags _______________________________ -->
 
 	<!-- https://haxe.org/manual/cr-dce.html -->
 	<haxeflag name="-dce full" />
-	<haxeflag name="--no-traces" if="release" unless="web"/>
+	<haxeflag name="--no-traces" if="release"/>
 
 	<!-- _________________________________ Custom _______________________________ -->
 
