@@ -15,6 +15,10 @@ import flixel.util.FlxSort;
 import lime.app.Application;
 import lime.graphics.Image;
 import openfl.display.BitmapData;
+#if desktop
+import shaders.UserShader;
+import sys.io.File;
+#end
 #if (!web && MOUSE_SHADER_TESTING)
 import shaders.MouseTrackerShader.MouseTrackerShaderManager;
 #end
@@ -130,6 +134,15 @@ class PlayState extends FlxState
 		#if (!web && MOUSE_SHADER_TESTING)
 		mouseShaderManager = new MouseTrackerShaderManager(camGame);
 		CCUtil.setCameraFilters(camGame, [mouseShaderManager.shader]);
+		#end
+
+		#if desktop
+		CCUtil.setCameraFilters(camGame, [
+			new UserShader(File.getContent(Paths.fragmentShader('camGame')), File.getContent(Paths.vertexShader('camGame')))
+		]);
+		CCUtil.setCameraFilters(camHUD, [
+			new UserShader(File.getContent(Paths.fragmentShader('camHUD')), File.getContent(Paths.vertexShader('camHUD')))
+		]);
 		#end
 
 		// bg spr loading

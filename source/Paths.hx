@@ -46,6 +46,16 @@ class Paths
 		return asset('sounds/$file.$SOUND_EXT');
 	}
 
+	inline public static function fragmentShader(file:String)
+	{
+		return asset('shaders/$file.frag');
+	}
+
+	inline public static function vertexShader(file:String)
+	{
+		return asset('shaders/$file.frag');
+	}
+
 	inline public static function getSparrowAtlas(files:String)
 	{
 		return FlxAtlasFrames.fromSparrow(image(files), xml(files));
@@ -95,6 +105,11 @@ class HiddenPaths
 	inline public static function sound(file:String)
 	{
 		return asset('sounds/$file.$SOUND_EXT');
+	}
+
+	inline public static function fragmentShader(file:String)
+	{
+		return asset('shaders/$file.frag');
 	}
 
 	inline public static function getSparrowAtlas(files:String)

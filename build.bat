@@ -27,7 +27,7 @@ cls
 title ColorCove - Building Debug
 echo Compiling, please wait...
 call buildUpdate.bat
-lime test windows -debug
+lime test windows -debug -D USER_SHADERS_REAL_3am=true
 echo.
 echo Debug build complete.
 set /p menu="Recompile? [Y/N/C]"
@@ -45,7 +45,7 @@ cls
 title ColorCove - Building
 echo Compiling, please wait...
 call buildUpdate.bat
-lime test windows -release
+lime test windows -release -D USER_SHADERS_REAL_3am=true
 echo.
 echo Release build complete.
 set /p menu="Recompile? [Y/N/C]"
