@@ -4,6 +4,9 @@
 - Fixed & properly implemented the popup texture atlas (As I now fully understand FlxAnimate)
 - Fixed runtime vertex shaders trying to run .frag files instead of .vert
 - Fixed a huge bug with the mobile web build that would screw up the BG.
+- Added runtime shader support
+- Attempted to fix blank BG bug with blurs on mobile HTML5 builds.
+- Fixed various typos on the outdated warning.
 
 # 0.6.1 (More Desktop Builds - Build 503)
 - Adds a github-compiled linux build to the downloads
