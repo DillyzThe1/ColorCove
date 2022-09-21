@@ -74,7 +74,7 @@ class OutdatedSubState extends BlurryFlxSubState
 			#end
 			+ 'https://www.github.com/DillyzThe1/ColorCove/releases/latest/\n\n';
 		}
-		warningText.text += '(${FlxG.onMobile ? 'Hold to igonre, Tap to download.\n' : 'ESCAPE to ignore, ENTER to ${#if desktop 'update' #else 'download' #end}, C to view Changelog, and I to report bugs.)\n'})';
+		warningText.text += '(${FlxG.onMobile ? 'Hold to ignore, Tap to download.' : 'ESCAPE to ignore, ENTER to ${#if desktop 'update' #else 'download' #end}, C to view Changelog, and I to report bugs.'})\n';
 		warningText.screenCenter();
 
 		popupBG.cameras = warningText.cameras = [bruhCam];

@@ -48,6 +48,8 @@ class PlayState extends FlxState
 	// Y OF EACH CHARACTER: 420 TO 640
 	public var musicBox:SongHandler;
 
+	public var optimizedBGSprites:FlxTypedSpriteGroup<FlxSprite>;
+
 	public function getBounds()
 	{
 		return new FlxPoint(4500, 700);
@@ -104,6 +106,8 @@ class PlayState extends FlxState
 		return popup;
 	}
 
+	public var onOptimizedBG:Bool = false;
+
 	public var defZoom:Float = 0.375;
 
 	override public function create()
@@ -145,23 +149,38 @@ class PlayState extends FlxState
 		]);
 		#end
 
+		onOptimizedBG = FlxG.onMobile;
+
 		// bg spr loading
-		sideWalkSpr = new FlxSprite(-1571, 324.3).loadGraphic(Paths.image('Sidewalk'));
-		// sideWalkSpr.x = 1280 / 2 - sideWalkSpr.width / 2;
-		buildingScroll = new BuildingScroll(0, -250, 16);
-		streetOverlaySpr = new FlxSprite(-370, -475).loadGraphic(Paths.image('Street Over'));
+		if (!onOptimizedBG)
+		{
+			sideWalkSpr = new FlxSprite(-1571, 324.3).loadGraphic(Paths.image('Sidewalk'));
+			// sideWalkSpr.x = 1280 / 2 - sideWalkSpr.width / 2;
+			buildingScroll = new BuildingScroll(0, -250, 16);
+			streetOverlaySpr = new FlxSprite(-370, -475).loadGraphic(Paths.image('Street Over'));
+
+			sideWalkSpr.setGraphicSize(10836, 1639);
+
+			sideWalkSpr.antialiasing = streetOverlaySpr.antialiasing = ClientSettings.getBoolByString('antialiasing', true);
+
+			// adding the bg
+			add(sideWalkSpr);
+			add(buildingScroll);
+			add(streetOverlaySpr);
+		}
+		else
+		{
+			optimizedBGSprites = new FlxTypedSpriteGroup<FlxSprite>();
+			add(optimizedBGSprites);
+			var bgOffsetMoment:Array<Int> = [-1250, -475];
+			// adding the bg
+			for (i in 0...4)
+				optimizedBGSprites.add(new FlxSprite(bgOffsetMoment[0] + (2048 * i),
+					bgOffsetMoment[1]).loadGraphic(Paths.image('Static Street Part ${i + 1}')));
+		}
 
 		// trace(sideWalkSpr.width);
 		// trace(sideWalkSpr.height);
-
-		sideWalkSpr.setGraphicSize(10836, 1639);
-
-		sideWalkSpr.antialiasing = streetOverlaySpr.antialiasing = ClientSettings.getBoolByString('antialiasing', true);
-
-		// adding the bg
-		add(sideWalkSpr);
-		add(buildingScroll);
-		add(streetOverlaySpr);
 
 		// adding the characters
 		// charSpriteDebugLmao = new CCSprite(1343.5, 584.9, 'Characters', 'Nicholas Idle', true);
