@@ -53,7 +53,7 @@ class Paths
 
 	inline public static function vertexShader(file:String)
 	{
-		return asset('shaders/$file.frag');
+		return asset('shaders/$file.vert');
 	}
 
 	inline public static function getSparrowAtlas(files:String)

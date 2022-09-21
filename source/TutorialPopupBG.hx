@@ -23,8 +23,8 @@ class TutorialPopupBG extends #if web FlxSprite #else FlxAnimate #end
 			FrameRate: 24
 		};
 		super(x, y, Paths.asset('images/Info Popup Atlas'), bruh);
-		// anim.addBySymbol('in', 'Go In', 24, false);
-		anim.play('', true, false, 0);
+		anim.addBySymbol('in', 'parts/info popup', 24, false);
+		anim.play('in', true, false, 0);
 		#end
 	}
 }

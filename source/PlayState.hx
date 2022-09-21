@@ -385,7 +385,7 @@ class PlayState extends FlxState
 	{
 		if (bruhTween != null)
 			bruhTween.cancel();
-		bruhTween = FlxTween.tween(camGame, {zoom: defZoom, angle: 0}, musicBox.getStepCrochet() / 500, {ease: FlxEase.cubeOut});
+		bruhTween = FlxTween.tween(camGame, {zoom: defZoom, angle: 0}, musicBox.getStepCrochet() / 500, {ease: FlxEase.cubeInOut});
 	}
 
 	public var camMovement:Bool;
@@ -439,6 +439,8 @@ class PlayState extends FlxState
 	{
 		for (i in 0...musicBox.curBeat)
 			checkBeat(i);
+		angleAddition *= 0.75;
+		zoomAddition *= 0.875;
 
 		if (!camMovement || !beatingPatterns[curBeatPat].contains(musicBox.curBeat % 16))
 			return;

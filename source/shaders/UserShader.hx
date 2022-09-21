@@ -182,8 +182,8 @@ class UserShader extends FlxShader
 			trace('bad vertex shader lmfao ur missing the header or main void');
 		}
 
-		trace(glFragmentSource);
-		trace(glVertexSource);
+		// trace(glFragmentSource);
+		// trace(glVertexSource);
 
 		// https://github.com/ShadowMario/FNF-PsychEngine/blob/main/source/flixel/addons/display/FlxRuntimeShader.hx#L225
 		@:privateAccess {
