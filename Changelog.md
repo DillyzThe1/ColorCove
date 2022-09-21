@@ -1,3 +1,10 @@
+# 0.6.2 (A Visually Appealing Bugfix - Build 526)
+- Adds better/cleaner camera movement to the game
+- Camera zoom & rotation toned down
+- Fixed & properly implemented the popup texture atlas (As I now fully understand FlxAnimate)
+- Fixed runtime vertex shaders trying to run .frag files instead of .vert
+- Fixed a huge bug with the mobile web build that would screw up the BG.
+
 # 0.6.1 (More Desktop Builds - Build 503)
 - Adds a github-compiled linux build to the downloads
 - Adds a github-compiled mac build to the downloads

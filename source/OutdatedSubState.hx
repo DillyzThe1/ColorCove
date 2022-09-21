@@ -21,8 +21,8 @@ class OutdatedSubState extends BlurryFlxSubState
 	public static var versionLink:String = 'https://raw.githubusercontent.com/DillyzThe1/ColorCove/master/colorCove.versionDownload';
 
 	public static var curBuildNum:Int = 0;
-	public static var curBuildVers:String = '0.6.0';
-	public static var curBuildName:String = 'Visually Enhanced Pre-Release';
+	public static var curBuildVers:String = '0.6.2';
+	public static var curBuildName:String = 'Visually Appealing Bugfix';
 
 	public static var publicBuildNum:Int = curBuildNum;
 	public static var publicBuildVers:String = curBuildVers;

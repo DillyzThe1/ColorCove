@@ -22,6 +22,8 @@ class BlurryFlxSubState extends FlxSubState
 	{
 		super.create();
 
+		if (FlxG.onMobile)
+			blurThingEnabled = false;
 		if (blurThingEnabled)
 		{
 			oldCamFilters = CCUtil.getCameraFilters(FlxG.camera);
