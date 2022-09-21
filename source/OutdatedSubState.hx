@@ -74,7 +74,7 @@ class OutdatedSubState extends BlurryFlxSubState
 			#end
 			+ 'https://www.github.com/DillyzThe1/ColorCove/releases/latest/\n\n';
 		}
-		warningText.text += '(${FlxG.onMobile ? 'Hold to ignore, Tap to download.' : 'ESCAPE to ignore, ENTER to ${#if desktop 'update' #else 'download' #end}, C to view Changelog, and I to report bugs.'})\n';
+		warningText.text += '(${FlxG.onMobile ? 'Tap to ignore.' /*'Hold to ignore, Tap to download.'*/ : 'ESCAPE to ignore, ENTER to ${#if desktop 'update' #else 'download' #end}, C to view Changelog, and I to report bugs.'})\n';
 		warningText.screenCenter();
 
 		popupBG.cameras = warningText.cameras = [bruhCam];
@@ -107,6 +107,7 @@ class OutdatedSubState extends BlurryFlxSubState
 		if (stopSpammingNerd)
 			return;
 
+		#if !mobile
 		if (FlxG.keys.justPressed.ESCAPE)
 			exitFunc();
 		else if (FlxG.keys.justPressed.ENTER)
@@ -115,9 +116,13 @@ class OutdatedSubState extends BlurryFlxSubState
 			FlxG.openURL('https://www.github.com/DillyzThe1/ColorCove/blob/main/Changelog.md');
 		else if (FlxG.keys.justPressed.I)
 			FlxG.openURL('https://github.com/DillyzThe1/ColorCove/issues/new/choose/');
+		#end
 
+		// this condition is for html5
 		if (FlxG.onMobile)
-			if (FlxG.mouse.pressed)
+			if (#if mobile CCUtil.justTouchedScreen() #else FlxG.mouse.justPressed #end)
+				exitFunc();
+		/*if (FlxG.mouse.pressed)
 			{
 				mouseTimer += e;
 				if (mouseTimer >= 2.5)
@@ -131,6 +136,6 @@ class OutdatedSubState extends BlurryFlxSubState
 				if (mouseTimer > 0.1)
 					exitFunc();
 				mouseTimer = 0;
-			}
+		}*/
 	}
 }

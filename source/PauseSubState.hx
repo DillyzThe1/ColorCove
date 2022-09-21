@@ -1,5 +1,7 @@
 package;
 
+// gotta port this to mobile later, just not right now.
+#if !mobile
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -221,3 +223,4 @@ class PauseMenuText extends FlxText
 		return _yGoal;
 	}
 }
+#end

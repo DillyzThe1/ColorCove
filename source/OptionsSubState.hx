@@ -58,7 +58,9 @@ class OptionsSubState extends BlurryFlxSubState
 	override public function update(e:Float)
 	{
 		super.update(e);
+		#if !mobile
 		if (FlxG.keys.justPressed.ESCAPE && !stopSpammingNerd)
 			newPopup.exitFunc();
+		#end
 	}
 }

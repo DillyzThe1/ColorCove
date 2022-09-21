@@ -15,6 +15,9 @@ import flixel.util.FlxSort;
 import lime.app.Application;
 import lime.graphics.Image;
 import openfl.display.BitmapData;
+
+using CCUtil;
+
 #if desktop
 import shaders.UserShader;
 import sys.io.File;
@@ -312,7 +315,7 @@ class PlayState extends FlxState
 
 		camFollow.setPosition(followPoint.x + Math.cos(totalElasped * 0.75) * 7.5, followPoint.y + Math.sin(totalElasped) * 20);
 
-		if (FlxG.random.bool(difficulty) || FlxG.keys.justPressed.ENTER)
+		if (FlxG.random.bool(difficulty)) // || FlxG.keys.justPressed.ENTER)
 			genCharacter();
 
 		difficulty += elapsed / 150;
@@ -321,18 +324,18 @@ class PlayState extends FlxState
 		// var streetLayer = streetOverlaySpr.sort
 		// for ()
 
-		var trolled = FlxG.mouse.justPressed;
+		var pressedOnScreen:Bool = #if mobile CCUtil.justTouchedScreen() #else FlxG.mouse.justPressed #end;
 
 		for (i in charList)
 		{
 			#if !web
 			i.shaderUpdate(elapsed, camGame, camFollow);
 			#end
-			if (FlxG.mouse.overlaps(i) && FlxG.mouse.justPressed)
+			if (#if !mobile FlxG.mouse.overlaps(i) #else i.touchingSprite() #end && pressedOnScreen)
 				if (i.phil && !i.philDied)
 				{
 					i.philDied = true;
-					trolled = false;
+					pressedOnScreen = false;
 					difficulty += 0.5;
 					var scorePlus = i.speed * (i.x - 750) / 25;
 					score += scorePlus;
@@ -342,11 +345,12 @@ class PlayState extends FlxState
 				}
 		}
 
-		if (trolled)
+		if (pressedOnScreen)
 		{
 			score -= 150;
 			difficulty -= 0.25;
-			popupText(FlxG.mouse.getPositionInCameraView(camGame).x + 2450, FlxG.mouse.getPositionInCameraView(camGame).y + 300, -150);
+			var clickOrTouchPos:FlxPoint = #if mobile CCUtil.getTouchPoint() #else FlxG.mouse.getPositionInCameraView(camGame) #end;
+			popupText(clickOrTouchPos.x + 2450, clickOrTouchPos.y + 300, -150);
 		}
 
 		if (difficulty < 0.5)
@@ -355,11 +359,12 @@ class PlayState extends FlxState
 		diffText.text = 'Difficulty: ${Std.int(difficulty * 10) / 10}';
 		scoreText.text = 'Score: ${Std.int(score)}';
 
-		if (FlxG.mouse.pressed)
+		if (#if mobile CCUtil.touchingScreen() #else FlxG.mouse.pressed #end)
 			pressTimer += elapsed;
 		else
 			pressTimer = 0;
 
+		#if !mobile
 		if (FlxG.keys.justPressed.ENTER)
 		{
 			// musicBox.toggleSongPause(true);
@@ -370,6 +375,7 @@ class PlayState extends FlxState
 			//	i.philDied = true;
 			openSubState(new PauseSubState(this));
 		}
+		#end
 
 		// mobile users
 		if (FlxG.onMobile && pressTimer >= 5)

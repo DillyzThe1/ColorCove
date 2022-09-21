@@ -5,12 +5,15 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.input.touch.FlxTouch;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import haxe.Http;
+
+using CCUtil;
 
 class MenuState extends FlxState
 {
@@ -143,6 +146,10 @@ class MenuState extends FlxState
 
 	var totalElapsed:Float = 0;
 
+	#if mobile
+	var hoveringMenuTitle:Bool = false;
+	#end
+
 	override public function update(elapsed:Float)
 	{
 		totalElapsed += elapsed;
@@ -155,21 +162,42 @@ class MenuState extends FlxState
 
 		if (!shutup)
 		{
+			#if !mobile
 			menuPlay.updateSize(FlxG.mouse.overlaps(menuPlay));
 			menuOptions.updateSize(FlxG.mouse.overlaps(menuOptions));
+			#else
+			var bruhSprs:Array<FlxSprite> = [menuTitle, menuPlay, menuOptions];
+			for (i in 0...bruhSprs.length)
+			{
+				hoveringMenuTitle = menuTitle.touchingSprite();
+				menuPlay.updateSize(menuPlay.touchingSprite());
+				menuOptions.updateSize(menuOptions.touchingSprite());
+			}
+			#end
 
-			if (FlxG.mouse.justPressed && !shutup)
+			#if !mobile
+			if (FlxG.mouse.justPressed)
+			#else
+			if (FlxG.touches.getFirst() != null)
+			{
+				var theVoicesTouchWav:Array<FlxTouch> = FlxG.touches.list;
+				for (i in 0...theVoicesTouchWav.length)
+					if (theVoicesTouchWav[i].justPressed)
+			#end
+			{
 				if (menuPlay.oldHovering)
 					doPress(menuPlay);
 				else if (menuOptions.oldHovering)
 					doPress(menuOptions);
-				else if (FlxG.mouse.overlaps(menuTitle))
+				else if (#if !mobile FlxG.mouse.overlaps(menuTitle) #else hoveringMenuTitle #end)
 				{
 					if (fredTrolling == 10)
 					{
 						musicBox.playSound('OW MY EARS', 1.25);
 						menuTitle.playAnim('fred 3am', true);
+						#if !mobile
 						FlxG.mouse.load(Paths.image('fred'), 0.1, -25, -25);
+						#end
 						fredTrolling = 20;
 					}
 					else if (fredTrolling < 10)
@@ -178,81 +206,85 @@ class MenuState extends FlxState
 						musicBox.playSound('le tap', 1);
 					}
 				}
+			}
+		#if mobile
 		}
-
-		#if debug
-		if (FlxG.keys.justPressed.NINE)
-			doPress(null);
 		#end
 	}
 
-	public function restoreButtons()
+	#if (debug && desktop)
+	if (FlxG.keys.justPressed.NINE)
+		doPress(null);
+	#end
+}
+
+public function restoreButtons()
+{
+	if (!shutup)
+		return;
+	shutup = false;
+
+	camGame.destroy();
+	var oldZoom:Float = camGame.zoom;
+	camGame = new FlxCamera();
+	camGame.zoom = oldZoom;
+	FlxG.cameras.reset(camGame);
+	camGame.bgColor = FlxColor.fromString("#99CCFF");
+	camGame.follow(camFollow, LOCKON, 0.03 / (FlxG.updateFramerate / 120));
+
+	followPoint.y = FlxG.height / 2;
+	FlxTween.tween(camGame, {zoom: 1}, 0.75, {ease: FlxEase.cubeInOut});
+	FlxTween.tween(menuTitle, {x: menuTitle.ogX}, 1.25, {ease: FlxEase.cubeOut});
+	FlxTween.tween(menuPlay, {x: menuPlay.ogX}, 1.25, {ease: FlxEase.cubeOut});
+	FlxTween.tween(menuOptions, {x: menuOptions.ogX}, 1.25, {ease: FlxEase.cubeOut});
+	// camGame.flash(FlxColor.WHITE, 0.75, null, true);
+}
+
+public function doPress(button:MenuButton)
+{
+	camGame.flash(FlxColor.WHITE, 1, null, true);
+	shutup = true;
+	FlxTween.tween(camGame, {zoom: 1.5}, 1.25, {ease: FlxEase.quadInOut});
+
+	FlxTween.tween(menuTitle, {x: FlxG.width + 500}, 0.75, {ease: FlxEase.quadIn});
+	if (button != menuPlay)
+		FlxTween.tween(menuPlay, {x: -500}, 0.75, {ease: FlxEase.quadIn});
+	if (button != menuOptions)
+		FlxTween.tween(menuOptions, {x: FlxG.width + 500}, 0.75, {ease: FlxEase.quadIn});
+
+	var sound = musicBox.playSound('allow_alt', 0.75);
+	sound.persist = false;
+
+	var the:FlxTimer = new FlxTimer();
+	the.start(1.75, function(time:FlxTimer)
 	{
-		if (!shutup)
-			return;
-		shutup = false;
-
-		camGame.destroy();
-		var oldZoom:Float = camGame.zoom;
-		camGame = new FlxCamera();
-		camGame.zoom = oldZoom;
-		FlxG.cameras.reset(camGame);
-		camGame.bgColor = FlxColor.fromString("#99CCFF");
-		camGame.follow(camFollow, LOCKON, 0.03 / (FlxG.updateFramerate / 120));
-
-		followPoint.y = FlxG.height / 2;
-		FlxTween.tween(camGame, {zoom: 1}, 0.75, {ease: FlxEase.cubeInOut});
-		FlxTween.tween(menuTitle, {x: menuTitle.ogX}, 1.25, {ease: FlxEase.cubeOut});
-		FlxTween.tween(menuPlay, {x: menuPlay.ogX}, 1.25, {ease: FlxEase.cubeOut});
-		FlxTween.tween(menuOptions, {x: menuOptions.ogX}, 1.25, {ease: FlxEase.cubeOut});
-		// camGame.flash(FlxColor.WHITE, 0.75, null, true);
-	}
-
-	public function doPress(button:MenuButton)
-	{
-		camGame.flash(FlxColor.WHITE, 1, null, true);
-		shutup = true;
-		FlxTween.tween(camGame, {zoom: 1.5}, 1.25, {ease: FlxEase.quadInOut});
-
-		FlxTween.tween(menuTitle, {x: FlxG.width + 500}, 0.75, {ease: FlxEase.quadIn});
-		if (button != menuPlay)
-			FlxTween.tween(menuPlay, {x: -500}, 0.75, {ease: FlxEase.quadIn});
-		if (button != menuOptions)
-			FlxTween.tween(menuOptions, {x: FlxG.width + 500}, 0.75, {ease: FlxEase.quadIn});
-
-		var sound = musicBox.playSound('allow_alt', 0.75);
-		sound.persist = false;
-
-		var the:FlxTimer = new FlxTimer();
-		the.start(1.75, function(time:FlxTimer)
+		if (button == menuPlay)
+			FlxG.switchState(new PlayState());
+		else if (button == menuOptions)
 		{
-			if (button == menuPlay)
-				FlxG.switchState(new PlayState());
-			else if (button == menuOptions)
-			{
-				followPoint.y = (FlxG.height / 2) + 375;
-				openSubState(new OptionsSubState());
-			}
-			#if debug
-			else
-				FlxG.switchState(new OffsetState());
-			#end
-		}, 1);
+			followPoint.y = (FlxG.height / 2) + 375;
+			openSubState(new OptionsSubState());
+		}
+		#if (debug && desktop)
+		else
+			FlxG.switchState(new OffsetState());
+		#end
+	}, 1);
 
-		/*sound.onComplete = function()
+	/*sound.onComplete = function()
 			{
 				if (button == menuPlay)
 					FlxG.switchState(new PlayState());
 				else if (button == menuOptions)
 					FlxG.switchState(new OffsetState());
 		};*/
-	}
+}
 
-	public function songStep() {}
+public function songStep() {}
 
-	public function songBeat()
-	{
-		menuTitle.angle = musicBox.curBeat % 2 == 1 ? 5 : -5;
-		FlxTween.tween(menuTitle, {angle: 0}, musicBox.getStepCrochet() / 500, {ease: FlxEase.cubeOut});
-	}
+public function songBeat()
+{
+	menuTitle.angle = musicBox.curBeat % 2 == 1 ? 5 : -5;
+	FlxTween.tween(menuTitle, {angle: 0}, musicBox.getStepCrochet() / 500, {ease: FlxEase.cubeOut});
+}
 }

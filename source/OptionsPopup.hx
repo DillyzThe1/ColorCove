@@ -10,6 +10,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import haxe.exceptions.NotImplementedException;
 
+using CCUtil;
 using StringTools;
 
 typedef OptionDataLmao =
@@ -246,16 +247,11 @@ class OptionsPopup extends FlxSpriteGroup
 	{
 		super.update(e);
 
+		#if !mobile
 		if (FlxG.keys.justPressed.LEFT)
 			updateTabText(-1);
 		else if (FlxG.keys.justPressed.RIGHT)
 			updateTabText(1);
-
-		if (tabArrowRight.animation.curAnim != null)
-			if (tabArrowRight.animation.curAnim.name == 'press' && tabArrowRight.animation.curAnim.curFrame >= 6)
-				tabArrowRight.offset.x = -43;
-			else
-				tabArrowRight.offset.x = 0;
 
 		if (FlxG.mouse.justPressed)
 		{
@@ -285,6 +281,30 @@ class OptionsPopup extends FlxSpriteGroup
 				i.updateDisplay();
 			}
 		}
+		#else
+		if (CCUtil.justTouchedScreen())
+		{
+			for (i in optionArray)
+				if (i.hitbox.touchingSprite())
+					i.clickThing();
+			if (tabArrowLeft.touchingSprite())
+				updateTabText(-1);
+			else if (tabArrowRight.touchingSprite())
+				updateTabText(1);
+			else if (exitButton.touchingSprite())
+			{
+				exitButton.playAnim('hit', true);
+				if (exitFunc != null)
+					exitFunc();
+			}
+		}
+		#end
+
+		if (tabArrowRight.animation.curAnim != null)
+			if (tabArrowRight.animation.curAnim.name == 'press' && tabArrowRight.animation.curAnim.curFrame >= 6)
+				tabArrowRight.offset.x = -43;
+			else
+				tabArrowRight.offset.x = 0;
 	}
 }
 
@@ -469,7 +489,7 @@ class IntOption extends Option
 	override public function clickThing()
 	{
 		oldValue = realValue;
-		if (FlxG.mouse.overlaps(bruhHitbox))
+		if (#if !mobile FlxG.mouse.overlaps(bruhHitbox) #else bruhHitbox.touchingSprite() #end)
 			realValue -= upBy;
 		else
 			realValue += upBy;
@@ -543,7 +563,7 @@ class FloatOption extends Option
 	override public function clickThing()
 	{
 		oldValue = realValue;
-		if (FlxG.mouse.overlaps(bruhHitbox))
+		if (#if !mobile FlxG.mouse.overlaps(bruhHitbox) #else bruhHitbox.touchingSprite() #end)
 			realValue -= upBy;
 		else
 			realValue += upBy;

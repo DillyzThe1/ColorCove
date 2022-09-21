@@ -1,4 +1,4 @@
-#if debug
+#if (debug && desktop)
 package;
 
 import flixel.FlxG;

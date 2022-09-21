@@ -1,6 +1,11 @@
 package;
 
+import flixel.FlxBasic;
 import flixel.FlxCamera;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.input.touch.FlxTouch;
+import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.util.typeLimit.OneOfThree;
 import lime.app.Application;
@@ -80,4 +85,65 @@ class CCUtil
 
 		return retArray;
 	}
+
+	#if mobile
+	public static function touchingSprite(thespr:FlxSprite, ?offset:FlxPoint):Bool
+	{
+		return touchOverlaps(thespr.x, thespr.y, Std.int(thespr.width), Std.int(thespr.height), offset);
+	}
+
+	public static function touchOverlaps(x:Float = 1, y:Float = 1, ?width:Int = 1, ?height:Int = 1, ?offset:FlxPoint):Bool
+	{
+		if (offset == null)
+			offset = new FlxPoint(0, 0);
+		if (FlxG.touches.getFirst() != null)
+		{
+			var theVoicesTouchWav:Array<FlxTouch> = FlxG.touches.list;
+			for (i in 0...theVoicesTouchWav.length)
+				if (theVoicesTouchWav[i].pressed)
+					for (xx in 0...width)
+						for (yy in 0...height)
+							if (theVoicesTouchWav[i].justPressedPosition.x == (xx + x)
+								&& theVoicesTouchWav[i].justPressedPosition.y == (yy + y))
+								return true;
+		}
+		return false;
+	}
+
+	public static function justTouchedScreen():Bool
+	{
+		if (FlxG.touches.getFirst() != null)
+		{
+			var theVoicesTouchWav:Array<FlxTouch> = FlxG.touches.list;
+			for (i in 0...theVoicesTouchWav.length)
+				if (theVoicesTouchWav[i].justPressed)
+					return true;
+		}
+		return false;
+	}
+
+	public static function touchingScreen():Bool
+	{
+		if (FlxG.touches.getFirst() != null)
+		{
+			var theVoicesTouchWav:Array<FlxTouch> = FlxG.touches.list;
+			for (i in 0...theVoicesTouchWav.length)
+				if (theVoicesTouchWav[i].pressed)
+					return true;
+		}
+		return false;
+	}
+
+	public static function getTouchPoint():FlxPoint
+	{
+		if (FlxG.touches.getFirst() != null)
+		{
+			var theVoicesTouchWav:Array<FlxTouch> = FlxG.touches.list;
+			for (i in 0...theVoicesTouchWav.length)
+				if (theVoicesTouchWav[i].justPressed)
+					return theVoicesTouchWav[i].justPressedPosition;
+		}
+		return new FlxPoint(0, 0);
+	}
+	#end
 }
