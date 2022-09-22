@@ -13,6 +13,9 @@
 	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
 	<set name="SWF_VERSION" value="11.8" />
 
+	<!-- setting the name to correctly match what i want for mobile -->
+	<app title="ColorCove" if="mobile" />
+
 	<!-- ____________________________ Window Settings ___________________________ -->
 
 	<!--These window settings apply to all targets-->
@@ -25,7 +28,7 @@
 	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
 
 	<!--Mobile-specific-->
-	<window if="mobile" orientation="landscape" fps="60" fullscreen="true" width="0" height="0" />
+	<window if="mobile" orientation="landscape" fps="60" fullscreen="true" />
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
@@ -105,12 +108,7 @@
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	
-	<icon path="art/icon.png" />
-
-	<icon path="art/icon36_android.png" size="36" if="android" />
-	<icon path="art/icon48_android.png" size="48" if="android" />
-	<icon path="art/icon72_android.png" size="72" if="android" />
-	<icon path="art/icon96_android.png" size="96" if="android" />
-
+	<icon path="art/icon.png"/>
+	<!--icon path="art/iconGame.svg"/-->
 	<assets path='art/README.txt' rename="DON'T README.txt" />
 </project>
