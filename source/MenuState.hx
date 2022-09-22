@@ -119,12 +119,14 @@ class MenuState extends FlxState
 				if (OutdatedSubState.curBuildNum != OutdatedSubState.publicBuildNum)
 				{
 					musicBox.playSound('pause');
+					// #if !mobile
 					var ss:OutdatedSubState = new OutdatedSubState();
 					ss.exitFunc = function()
 					{
 						closeSubState();
 					};
 					openSubState(ss);
+					// #end
 				}
 				else
 					musicBox.playSound('allow');
@@ -185,6 +187,7 @@ class MenuState extends FlxState
 					if (theVoicesTouchWav[i].justPressed)
 			#end
 			{
+				musicBox.playSound('kill', 1);
 				if (menuPlay.oldHovering)
 					doPress(menuPlay);
 				else if (menuOptions.oldHovering)

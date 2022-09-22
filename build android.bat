@@ -25,7 +25,8 @@ set /p menu="Build debug for android? [Y/N/C]"
 cls
 title ColorCove - Building Debug
 echo Compiling, please wait...
-lime test android -debug -simulator
+lime test android -debug
+::-simulator
 echo.
 echo Debug build complete.
 set /p menu="Recompile? [Y/N/C]"

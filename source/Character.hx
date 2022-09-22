@@ -187,7 +187,7 @@ class Character extends CCSprite
 			setShaderFloat(philShader.philProgress, intendedVal);
 			setShaderFloat(philShader.elapsedTime, getShaderFloat(philShader.elapsedTime) + e);
 
-			#if debug
+			#if (debug && desktop)
 			if (FlxG.keys.justPressed.P && phil)
 				trace('PHIL PROGRESS: ${getShaderFloat(philShader.philProgress)}, INTENDED PROGRESS: $intendedVal');
 			#end

@@ -16,7 +16,7 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-		addChild(new FlxGame(0, 0, initialState, 1, frameRate, frameRate, true, #if !desktop true #else false #end));
+		addChild(new FlxGame(1280, 720, initialState, 1, frameRate, frameRate, true, #if !desktop true #else false #end));
 		addChild(new FPS(0, 0, FlxColor.WHITE));
 		#if !mobile
 		FlxG.mouse.visible = !FlxG.onMobile;
