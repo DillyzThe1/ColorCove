@@ -103,8 +103,8 @@ class CCUtil
 				if (theVoicesTouchWav[i].pressed)
 					for (xx in 0...width)
 						for (yy in 0...height)
-							if (theVoicesTouchWav[i].justPressedPosition.x == (xx + x)
-								&& theVoicesTouchWav[i].justPressedPosition.y == (yy + y))
+							if (Std.int(theVoicesTouchWav[i].justPressedPosition.x) == Std.int(xx + x)
+								&& Std.int(theVoicesTouchWav[i].justPressedPosition.y) == Std.int(yy + y))
 								return true;
 		}
 		return false;

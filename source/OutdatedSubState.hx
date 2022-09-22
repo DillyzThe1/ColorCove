@@ -118,10 +118,12 @@ class OutdatedSubState extends BlurryFlxSubState
 			FlxG.openURL('https://github.com/DillyzThe1/ColorCove/issues/new/choose/');
 		#end
 
-		// this condition is for html5
+		// this condition is for html5, otherwise, it'd have a compilation flag all around it
 		if (FlxG.onMobile)
 			if (#if mobile CCUtil.justTouchedScreen() #else FlxG.mouse.justPressed #end)
+			{
 				exitFunc();
+			}
 		/*if (FlxG.mouse.pressed)
 			{
 				mouseTimer += e;

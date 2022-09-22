@@ -187,12 +187,12 @@ class MenuState extends FlxState
 					if (theVoicesTouchWav[i].justPressed)
 			#end
 			{
-				musicBox.playSound('kill', 1);
-				if (menuPlay.oldHovering)
+				// musicBox.playSound('kill', 1);
+				if (menuPlay.oldHovering #if mobile || menuPlay.touchingSprite() #end)
 					doPress(menuPlay);
-				else if (menuOptions.oldHovering)
+				else if (menuOptions.oldHovering #if mobile || menuOptions.touchingSprite() #end)
 					doPress(menuOptions);
-				else if (#if !mobile FlxG.mouse.overlaps(menuTitle) #else hoveringMenuTitle #end)
+				else if (#if !mobile FlxG.mouse.overlaps(menuTitle) #else hoveringMenuTitle || menuTitle.touchingSprite() #end)
 				{
 					if (fredTrolling == 10)
 					{
