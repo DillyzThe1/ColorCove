@@ -4,7 +4,7 @@
 
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="ColorCove by DillyzThe1" file="ColorCove" main="Main" version="0.6.2" company="DillyzThe1" packageName="com.github.dillyzthe1.indie.colorcove" package="com.github.dillyzthe1.indie.colorcove" />
+	<app title="ColorCove by DillyzThe1" file="ColorCove" main="Main" version="0.6.2" company="DillyzThe1" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
@@ -12,9 +12,6 @@
 
 	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
 	<set name="SWF_VERSION" value="11.8" />
-
-	<!-- setting the name to correctly match what i want for mobile -->
-	<app title="ColorCove" if="mobile" />
 
 	<!-- ____________________________ Window Settings ___________________________ -->
 
@@ -28,7 +25,7 @@
 	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
 
 	<!--Mobile-specific-->
-	<window if="mobile" orientation="landscape" fps="60" fullscreen="true" />
+	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" />
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
@@ -108,7 +105,6 @@
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	
-	<icon path="art/icon.png"/>
-	<!--icon path="art/iconGame.svg"/-->
+	<icon path="art/icon.png" />
 	<assets path='art/README.txt' rename="DON'T README.txt" />
 </project>
