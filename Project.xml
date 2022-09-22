@@ -107,10 +107,10 @@
 	
 	<icon path="art/icon.png" />
 
-	<icon path="art/icon36android.png" size="36" if="android" />
-	<icon path="art/icon48android.png" size="48" if="android" />
-	<icon path="art/icon72android.png" size="72" if="android" />
-	<icon path="art/icon96android.png" size="96" if="android" />
+	<icon path="art/icon36_android.png" size="36" if="android" />
+	<icon path="art/icon48_android.png" size="48" if="android" />
+	<icon path="art/icon72_android.png" size="72" if="android" />
+	<icon path="art/icon96_android.png" size="96" if="android" />
 
 	<assets path='art/README.txt' rename="DON'T README.txt" />
 </project>
