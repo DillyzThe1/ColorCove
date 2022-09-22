@@ -4,7 +4,7 @@
 
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="ColorCove by DillyzThe1" file="ColorCove" main="Main" version="0.6.2" company="DillyzThe1" />
+	<app title="ColorCove by DillyzThe1" file="ColorCove" main="Main" version="0.6.2" company="DillyzThe1" packageName="com.github.dillyzthe1.indie.colorcove" package="com.github.dillyzthe1.indie.colorcove" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
@@ -104,7 +104,7 @@
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
-	
-	<icon path="art/icon.png" />
+	<!--icon path="art/icon.png"/-->
+	<icon path="art/iconGame.svg"/>
 	<assets path='art/README.txt' rename="DON'T README.txt" />
 </project>
