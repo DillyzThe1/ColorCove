@@ -22,7 +22,7 @@ class OutdatedSubState extends BlurryFlxSubState
 
 	public static var curBuildNum:Int = 0;
 	public static var curBuildVers:String = '0.6.2b';
-	public static var curBuildName:String = 'Visually Appealing Bugfix: Android Mode';
+	public static var curBuildName:String = 'Visually Appealing Bugfix: Android Fork';
 
 	public static var publicBuildNum:Int = curBuildNum;
 	public static var publicBuildVers:String = curBuildVers;
@@ -96,6 +96,13 @@ class OutdatedSubState extends BlurryFlxSubState
 			FlxTween.tween(bruhCam, {alpha: 0}, 0.65, {ease: FlxEase.cubeOut});
 			tweenOutBlur();
 		};
+
+		#if mobile
+		new FlxTimer().start(2.5, function(t:FlxTimer)
+		{
+			exitFunc();
+		}, 1);
+		#end
 	}
 
 	var stopSpammingNerd:Bool = false;

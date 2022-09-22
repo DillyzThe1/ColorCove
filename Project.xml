@@ -98,7 +98,7 @@
 	<!-- _________________________________ Haxeflags _______________________________ -->
 
 	<!-- https://haxe.org/manual/cr-dce.html -->
-	<haxeflag name="-dce full" />
+	<haxeflag name="-dce full" unless="mobile" />
 	<haxeflag name="--no-traces" if="release"/>
 
 	<!-- _________________________________ Custom _______________________________ -->

@@ -7,6 +7,9 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxPoint;
+import flixel.text.FlxText.FlxTextAlign;
+import flixel.text.FlxText.FlxTextBorderStyle;
+import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -32,6 +35,10 @@ class MenuState extends FlxState
 	public var camFollow:FlxObject;
 	public var followPoint:FlxPoint;
 
+	private var versText:FlxText;
+
+	private var camHUD:FlxCamera;
+
 	override public function create()
 	{
 		instance = this;
@@ -41,6 +48,9 @@ class MenuState extends FlxState
 		camGame = new FlxCamera();
 		camGame.zoom = 1;
 		FlxG.cameras.reset(camGame);
+		camHUD = new FlxCamera();
+		camHUD.bgColor.alpha = 1;
+		FlxG.cameras.add(camHUD, false);
 		camGame.bgColor = FlxColor.fromString("#99CCFF");
 
 		BlurryFlxSubState.blurThingEnabled = ClientSettings.getBoolByString('pausemenublur', true);
@@ -98,6 +108,7 @@ class MenuState extends FlxState
 			menuTitle.playAnim('fred 3am', true);
 		}
 
+		var versstring:String = 'v${OutdatedSubState.curBuildVers} (${OutdatedSubState.curBuildName})';
 		if (!checkedVersion)
 		{
 			checkedVersion = true;
@@ -119,14 +130,15 @@ class MenuState extends FlxState
 				if (OutdatedSubState.curBuildNum != OutdatedSubState.publicBuildNum)
 				{
 					musicBox.playSound('pause');
-					// #if !mobile
+					versstring = 'OUTDATED - $versstring';
+					#if !mobile
 					var ss:OutdatedSubState = new OutdatedSubState();
 					ss.exitFunc = function()
 					{
 						closeSubState();
 					};
 					openSubState(ss);
-					// #end
+					#end
 				}
 				else
 					musicBox.playSound('allow');
@@ -140,6 +152,12 @@ class MenuState extends FlxState
 
 			dataRequest.request();
 		}
+
+		versText = new FlxText(10, FlxG.height - 10 - 16, 0, versstring, 16, true);
+		versText.setFormat(Paths.font('FredokaOne-Regular'), 16, FlxColor.WHITE, FlxTextAlign.RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, true);
+		versText.antialiasing = ClientSettings.getBoolByString('antialiasing', true);
+		versText.cameras = [camHUD];
+		add(versText);
 	}
 
 	public var shutup:Bool = false;
