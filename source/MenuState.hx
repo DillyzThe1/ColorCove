@@ -132,7 +132,7 @@ class MenuState extends FlxState
 				if (OutdatedSubState.curBuildNum != OutdatedSubState.publicBuildNum)
 				{
 					musicBox.playSound('pause');
-					versstring = 'OUTDATED - $versstring';
+					versstring = '${OutdatedSubState.publicBuildNum > OutdatedSubState.curBuildNum ? 'OUTDATED' : 'PREVIEW'} - $versstring';
 					#if !mobile
 					var ss:OutdatedSubState = new OutdatedSubState();
 					ss.exitFunc = function()

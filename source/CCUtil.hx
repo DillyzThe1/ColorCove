@@ -87,12 +87,12 @@ class CCUtil
 	}
 
 	#if mobile
-	public static function touchingSprite(thespr:FlxSprite, ?offset:FlxPoint):Bool
+	public static function touchingSprite(thespr:FlxSprite, ?offset:FlxPoint, ?withCamera:Bool = true):Bool
 	{
-		return touchOverlaps(thespr.x, thespr.y, Std.int(thespr.width), Std.int(thespr.height), offset);
+		return touchOverlaps(thespr.x, thespr.y, Std.int(thespr.width), Std.int(thespr.height), offset, withCamera);
 	}
 
-	public static function touchOverlaps(x:Float = 1, y:Float = 1, ?width:Int = 1, ?height:Int = 1, ?offset:FlxPoint):Bool
+	public static function touchOverlaps(x:Float = 1, y:Float = 1, ?width:Int = 1, ?height:Int = 1, ?offset:FlxPoint, ?withCamera:Bool = true):Bool
 	{
 		if (offset == null)
 			offset = new FlxPoint(0, 0);
@@ -103,8 +103,8 @@ class CCUtil
 				if (theVoicesTouchWav[i].pressed)
 					for (xx in 0...width)
 						for (yy in 0...height)
-							if (Std.int(theVoicesTouchWav[i].justPressedPosition.x) == Std.int(xx + x)
-								&& Std.int(theVoicesTouchWav[i].justPressedPosition.y) == Std.int(yy + y))
+							if (Std.int(theVoicesTouchWav[i].justPressedPosition.x + offset.x + (withCamera ? FlxG.camera.x : 0)) == Std.int(xx + x)
+								&& Std.int(theVoicesTouchWav[i].justPressedPosition.y + offset.y + (withCamera ? FlxG.camera.y : 0)) == Std.int(yy + y))
 								return true;
 		}
 		return false;
