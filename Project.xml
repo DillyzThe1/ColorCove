@@ -115,5 +115,25 @@
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	<icon path="art/icon.png"/>
 	<!--icon path="art/iconGame.svg"/-->
+	<section if="android">
+		<icon path="art/icon.png" size="36" />
+		<icon path="art/icon.png" size="48" />
+		<icon path="art/icon.png" size="72" />
+		<icon path="art/icon.png" size="96" />
+		<icon path="art/icon.png" size="144" />
+		<icon path="art/icon.png" size="192" />
+	</section>
+	<section if="desktop">
+		<icon path="art/icon.png" size="16" />
+		<icon path="art/icon.png" size="24" />
+		<icon path="art/icon.png" size="32" />
+		<icon path="art/icon.png" size="40" />
+		<icon path="art/icon.png" size="48" />
+		<icon path="art/icon.png" size="64" />
+		<icon path="art/icon.png" size="96" />
+		<icon path="art/icon.png" size="128" />
+		<icon path="art/icon.png" size="256" />
+	</section>
+	
 	<assets path='art/README.txt' rename="DON'T README.txt" />
 </project>
