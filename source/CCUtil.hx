@@ -100,7 +100,7 @@ class CCUtil
 		{
 			var theVoicesTouchWav:Array<FlxTouch> = FlxG.touches.list;
 			for (i in 0...theVoicesTouchWav.length)
-				if (theVoicesTouchWav[i].pressed)
+				if (theVoicesTouchWav[i].justPressed)
 					for (xx in 0...width)
 						for (yy in 0...height)
 							if (Std.int(theVoicesTouchWav[i].justPressedPosition.x + offset.x + (withCamera ? FlxG.camera.x : 0)) == Std.int(xx + x)
