@@ -328,7 +328,7 @@ class PlayState extends FlxState
 
 		for (i in charList)
 		{
-			#if !web
+			#if SHADERS_ENABLED
 			i.shaderUpdate(elapsed, camGame, camFollow);
 			#end
 			if (#if !mobile FlxG.mouse.overlaps(i) #else i.touchingSprite() #end && pressedOnScreen)

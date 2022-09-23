@@ -1,6 +1,6 @@
 package shaders;
 
-#if desktop
+#if (desktop && SHADERS_ENABLED)
 import flixel.system.FlxAssets.FlxShader;
 
 using StringTools;

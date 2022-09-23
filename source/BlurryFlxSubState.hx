@@ -10,6 +10,7 @@ import openfl.filters.BlurFilter;
 
 class BlurryFlxSubState extends FlxSubState
 {
+	#if BLUR_ENABLED
 	public static var blurThingEnabled:Bool;
 
 	public var oldCamFilters:Array<BitmapFilter>;
@@ -17,11 +18,15 @@ class BlurryFlxSubState extends FlxSubState
 	public var blurFilter:BlurFilter;
 
 	public static var blurTween:FlxTween;
+	#end
+
+	public var onEndBlurOut:() -> Void;
 
 	override public function create()
 	{
 		super.create();
 
+		#if BLUR_ENABLED
 		if (FlxG.onMobile)
 			blurThingEnabled = false;
 		if (blurThingEnabled)
@@ -35,12 +40,12 @@ class BlurryFlxSubState extends FlxSubState
 			blurFilter.blurX = blurFilter.blurY = 0;
 			blurTween = FlxTween.tween(blurFilter, {blurX: 2, blurY: 2}, 1.5, {ease: FlxEase.cubeInOut});
 		}
+		#end
 	}
-
-	public var onEndBlurOut:() -> Void;
 
 	public function tweenOutBlur()
 	{
+		#if BLUR_ENABLED
 		if (!blurThingEnabled || blurFilter == null)
 		{
 			var the:FlxTimer = new FlxTimer();
@@ -64,14 +69,23 @@ class BlurryFlxSubState extends FlxSubState
 					onEndBlurOut();
 			}
 		});
+		#else
+		new FlxTimer().start(0.75, function(time:FlxTimer)
+		{
+			if (onEndBlurOut != null)
+				onEndBlurOut();
+		}, 1);
+		#end
 	}
 
 	public function endBlurEffects()
 	{
+		#if BLUR_ENABLED
 		if (blurTween != null)
 			blurTween.cancel();
 
 		if (blurThingEnabled)
 			CCUtil.setCameraFilters(FlxG.camera, oldCamFilters != null ? oldCamFilters : []);
+		#end
 	}
 }

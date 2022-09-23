@@ -73,7 +73,9 @@ class OptionsPopup extends FlxSpriteGroup
 			'Visuals',
 			[
 				optBool('quality', 'Antialiasing', true),
+				#if BLUR_ENABLED
 				optBool('pause blur', 'Pause Menu Blur', true)
+				#end
 			]
 		],
 		[
@@ -83,7 +85,7 @@ class OptionsPopup extends FlxSpriteGroup
 				optBool('autopause', 'Auto Pause', true)
 			]
 		],
-		#if !web
+		#if SHADERS_ENABLED
 		[
 			'Shaders',
 			[

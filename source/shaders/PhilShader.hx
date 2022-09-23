@@ -1,6 +1,6 @@
 package shaders;
 
-#if !web
+#if SHADERS_ENABLED
 import flixel.system.FlxAssets.FlxShader;
 
 @:keep

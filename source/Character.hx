@@ -17,7 +17,7 @@ class Character extends CCSprite
 {
 	public var finishFunc:(instance:Character, phil:Bool) -> Void;
 
-	#if !web
+	#if SHADERS_ENABLED
 	public var philShader:PhilShader;
 	#if !DISABLE_NICHOLAS_SHADER
 	public var nicholasShader:NicholasHintEffect;
@@ -38,14 +38,14 @@ class Character extends CCSprite
 			if (anim == 'death-alt')
 				alpha = 0;
 		};
-		#if !web
+		#if SHADERS_ENABLED
 		doPhilShader = ClientSettings.getBoolByString('philwarningshader', true);
 		#end
 	}
 
 	override public function destroy()
 	{
-		#if !web
+		#if SHADERS_ENABLED
 		philShader = null;
 		#end
 		super.destroy();
@@ -64,7 +64,7 @@ class Character extends CCSprite
 
 	public var phil:Bool = false;
 	public var philDied:Bool = false;
-	#if !web
+	#if SHADERS_ENABLED
 	public var doPhilShader:Bool = false;
 	#end
 
@@ -102,7 +102,7 @@ class Character extends CCSprite
 
 		funnyDance(false);
 
-		#if !web
+		#if SHADERS_ENABLED
 		if (phil) // phil)
 		{
 			if (doPhilShader)
@@ -147,7 +147,7 @@ class Character extends CCSprite
 		});*/
 	}
 
-	#if !web
+	#if SHADERS_ENABLED
 	public function setShaderFloat(sp:ShaderParameter<Float>, value:Float)
 	{
 		if (sp.value == null)
@@ -178,7 +178,7 @@ class Character extends CCSprite
 			x -= speed * e * 45;
 	}
 
-	#if !web
+	#if SHADERS_ENABLED
 	public function shaderUpdate(e:Float, cam:FlxCamera, camFollow:FlxObject)
 	{
 		if (philShader != null && phil)

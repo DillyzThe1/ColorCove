@@ -86,6 +86,10 @@
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
 
+	<!-- Allow shaders to work in general. Android and web don't seem to compile my GLSL correctly. -->
+	<haxedef name="SHADERS_ENABLED" if="desktop" />
+	<haxedef name="BLUR_ENABLED" if="desktop || web" />
+
 	<!--haxedef name="MOUSE_SHADER_TESTING"/-->
 
 	<!-- This isn't working. The mouse won't cooperate. I hate haxeflixel collision and mouse detection. -->

@@ -1,6 +1,6 @@
 package shaders;
 
-#if !DISABLE_NICHOLAS_SHADER
+#if (!DISABLE_NICHOLAS_SHADER && SHADERS_ENABLED)
 import flixel.FlxCamera;
 import flixel.FlxObject;
 import flixel.system.FlxAssets.FlxShader;
