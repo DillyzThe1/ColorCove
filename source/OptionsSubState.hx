@@ -41,7 +41,9 @@ class OptionsSubState extends BlurryFlxSubState
 			{
 				endBlurEffects();
 				ClientSettings.setData();
+				#if BLUR_ENABLED
 				BlurryFlxSubState.blurThingEnabled = ClientSettings.getBoolByString('pausemenublur', true);
+				#end
 				FlxG.cameras.remove(bruhCam);
 				// FlxG.switchState(new MenuState());
 				newPopup.destroy();
