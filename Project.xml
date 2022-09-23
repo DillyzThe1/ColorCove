@@ -113,8 +113,8 @@
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
-	<icon path="art/icon.png"/>
 	<!--icon path="art/iconGame.svg"/-->
+	<icon path="art/icon.png"/>
 	<section if="android">
 		<icon path="art/icon.png" size="36" />
 		<icon path="art/icon.png" size="48" />

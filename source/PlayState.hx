@@ -6,6 +6,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
+import flixel.input.android.FlxAndroidKey;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
@@ -252,6 +253,10 @@ class PlayState extends FlxState
 		mouseOrTouchHitbox.alpha = 0.125;
 		add(mouseOrTouchHitbox);
 		#end
+
+		#if android
+		FlxG.android.preventDefaultKeys = [FlxAndroidKey.BACK];
+		#end
 	}
 
 	var playableYet:Bool = false;
@@ -388,8 +393,7 @@ class PlayState extends FlxState
 		else
 			pressTimer = 0;
 
-		#if !mobile
-		if (FlxG.keys.justPressed.ENTER)
+		if (#if mobile FlxG.android.anyJustPressed([FlxAndroidKey.BACK]) #else FlxG.keys.justPressed.ENTER #end)
 		{
 			// musicBox.toggleSongPause(true);
 			oldMusTime = FlxG.sound.music.time;
@@ -399,7 +403,6 @@ class PlayState extends FlxState
 			//	i.philDied = true;
 			openSubState(new PauseSubState(this));
 		}
-		#end
 
 		// mobile users
 		if (FlxG.onMobile && pressTimer >= 5)

@@ -44,6 +44,10 @@ class MenuState extends FlxState
 		instance = this;
 		super.create();
 
+		#if android
+		FlxG.android.preventDefaultKeys = [];
+		#end
+
 		ClientSettings.retrieveData();
 		camGame = new FlxCamera();
 		camGame.zoom = 1;

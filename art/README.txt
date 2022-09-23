@@ -10,8 +10,9 @@ Project Files: https://www.github.com/DillyzThe1/ColorCove/
 Dev Links & Credits:
 Director, Programmer, Artist, Musician, Sound Design, Concepts, etc - DillyzThe1 (https://www.github.com/DillyzThe1)
 Feedback #1 & Other Ideas - TheFlameZEternal (she didnt give me a link to put lmao)
-Feedback #2 - Impostor (https://www.github.com/impostor5875)
+Feedback #2 - Impostor5875 (https://www.github.com/impostor5875)
 Game Jam Host - Matthew Schlauderaff (https://matthew-schlauderaff.itch.io/)
+Special Thanks #1 - Player03 (https://github.com/player-03)
 
 Programs used:
 Art - Adobe Animate (https://www.adobe.com/products/animate.html)

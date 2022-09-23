@@ -17,6 +17,18 @@ A colorful game across the side of a street.<br/>
 Your goal is to get the boring monochrome outliers to stop trying to make it boring!<br/>
 <i>Note: If you make a mod, make sure to edit this README's links & change this notice to be a disclaimer.</i>
 
+## Credits
+<i><u><b>Main Team:</b></u></i><br>
+[DillyzThe1](https://www.github.com/DillyzThe1) - Programmer<br>
+
+<i><u><b>Contributors:</b></u></i><br>
+TheFlameZEternal - Feedback & Other Ideas<br>
+[Impostor5875](https://www.github.com/impostor5875) - Feedback<br>
+
+<i><u><b>Speical Thanks:</b></u></i><br>
+[Matthew Schlauderaff](https://matthew-schlauderaff.itch.io/) - Mini Game Jam Host<br>
+[Player03](https://github.com/player-03) - Helped with the game icon not working past v0.6.2<br>
+
 ## How To Play
 
 For all desktop builds, go [here](https://github.com/DillyzThe1/ColorCove/releases) & download the zip.<br/>

@@ -1,13 +1,13 @@
 package;
 
-// gotta port this to mobile later, just not right now.
-#if !mobile
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
+import flixel.input.android.FlxAndroidKey;
 import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -121,6 +121,13 @@ class PauseSubState extends BlurryFlxSubState
 		if (exiting || !canInteract)
 			return;
 
+		#if mobile
+		var pressedOnScreen:Bool = CCUtil.justTouchedScreen();
+		var screenHitPos:FlxPoint = CCUtil.getTouchPoint();
+
+		if (pressedOnScreen)
+			pressIndex(optionList.members[curSel].buttonType);
+		#else
 		if (FlxG.keys.justPressed.UP)
 			updateSel(-1);
 		else if (FlxG.keys.justPressed.DOWN)
@@ -128,8 +135,9 @@ class PauseSubState extends BlurryFlxSubState
 
 		if (FlxG.keys.justPressed.ENTER)
 			pressIndex(optionList.members[curSel].buttonType);
+		#end
 
-		if (FlxG.keys.justPressed.ESCAPE)
+		if (#if mobile FlxG.android.anyJustPressed([FlxAndroidKey.BACK]) #else FlxG.keys.justPressed.ESCAPE #end)
 			exit();
 	}
 
@@ -223,4 +231,3 @@ class PauseMenuText extends FlxText
 		return _yGoal;
 	}
 }
-#end
