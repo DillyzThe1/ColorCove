@@ -22,7 +22,7 @@ using CCUtil;
 import shaders.UserShader;
 import sys.io.File;
 #end
-#if (!web && MOUSE_SHADER_TESTING)
+#if (SHADERS_ENABLED && MOUSE_SHADER_TESTING)
 import shaders.MouseTrackerShader.MouseTrackerShaderManager;
 #end
 
@@ -61,13 +61,16 @@ class PlayState extends FlxState
 	public var difficulty:Float = 0.5;
 	public var score:Float = 0;
 
-	#if (!web && MOUSE_SHADER_TESTING)
+	#if (SHADERS_ENABLED && MOUSE_SHADER_TESTING)
 	var mouseShaderManager:MouseTrackerShaderManager;
 	#end
 
 	public var showTutorial:Bool = false;
 
 	// public var charCountPerDifficulty:Int = 25;
+	#if PLAYSTATE_INPUT_DEBUGGING
+	private var mouseOrTouchHitbox:FlxSprite;
+	#end
 
 	public function killChar(instance:Character, phil:Bool)
 	{
@@ -138,7 +141,7 @@ class PlayState extends FlxState
 		FlxG.cameras.add(camHUD, false);
 		camGame.bgColor = FlxColor.fromString("#99CCFF");
 
-		#if (!web && MOUSE_SHADER_TESTING)
+		#if (SHADERS_ENABLED && MOUSE_SHADER_TESTING)
 		mouseShaderManager = new MouseTrackerShaderManager(camGame);
 		CCUtil.setCameraFilters(camGame, [mouseShaderManager.shader]);
 		#end
@@ -243,6 +246,12 @@ class PlayState extends FlxState
 		}
 		else
 			musicBox.playSong('side-walkin\'', 118);
+
+		#if PLAYSTATE_INPUT_DEBUGGING
+		mouseOrTouchHitbox = new FlxSprite().makeGraphic(512, 512, FlxColor.RED);
+		mouseOrTouchHitbox.alpha = 0.125;
+		add(mouseOrTouchHitbox);
+		#end
 	}
 
 	var playableYet:Bool = false;
@@ -269,6 +278,11 @@ class PlayState extends FlxState
 	public var pressTimer:Float = 0;
 	public var oldMusTime:Float = -1;
 
+	#if (mobile || PLAYSTATE_INPUT_DEBUGGING)
+	private var mandatoryOffsetThing:FlxPoint = new FlxPoint(1975, 200);
+	#end
+	private var textOffsetThing:FlxPoint = new FlxPoint(2450, 300);
+
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -285,7 +299,7 @@ class PlayState extends FlxState
 
 		totalElasped += elapsed;
 
-		#if (!web && MOUSE_SHADER_TESTING)
+		#if (SHADERS_ENABLED && MOUSE_SHADER_TESTING)
 		if (mouseShaderManager != null)
 			mouseShaderManager.updateShaderInfo(camGame);
 		#end
@@ -325,13 +339,24 @@ class PlayState extends FlxState
 		// for ()
 
 		var pressedOnScreen:Bool = #if mobile CCUtil.justTouchedScreen() #else FlxG.mouse.justPressed #end;
+		var screenHitPos:FlxPoint = #if mobile CCUtil.getTouchPoint() #else FlxG.mouse.getPositionInCameraView(camGame) #end;
+
+		#if PLAYSTATE_INPUT_DEBUGGING
+		if (pressedOnScreen)
+			mouseOrTouchHitbox.setPosition(screenHitPos.x
+				+ mandatoryOffsetThing.x
+				- mouseOrTouchHitbox.width / 2,
+				screenHitPos.y
+				+ mandatoryOffsetThing.y
+				- mouseOrTouchHitbox.height / 2);
+		#end
 
 		for (i in charList)
 		{
 			#if SHADERS_ENABLED
 			i.shaderUpdate(elapsed, camGame, camFollow);
 			#end
-			if (#if !mobile FlxG.mouse.overlaps(i) #else i.touchingSprite() #end && pressedOnScreen)
+			if (#if !mobile FlxG.mouse.overlaps(i) #else i.touchingSprite(mandatoryOffsetThing) #end && pressedOnScreen)
 				if (i.phil && !i.philDied)
 				{
 					i.philDied = true;
@@ -349,8 +374,7 @@ class PlayState extends FlxState
 		{
 			score -= 150;
 			difficulty -= 0.25;
-			var clickOrTouchPos:FlxPoint = #if mobile CCUtil.getTouchPoint() #else FlxG.mouse.getPositionInCameraView(camGame) #end;
-			popupText(clickOrTouchPos.x + 2450, clickOrTouchPos.y + 300, -150);
+			popupText(screenHitPos.x + textOffsetThing.x, screenHitPos.y + textOffsetThing.y, -150);
 		}
 
 		if (difficulty < 0.5)

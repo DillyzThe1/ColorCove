@@ -88,6 +88,11 @@
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
+	<!-- _________________________________ Haxeflags _______________________________ -->
+
+	<!-- https://haxe.org/manual/cr-dce.html -->
+	<haxeflag name="-dce full" unless="mobile" />
+	<haxeflag name="--no-traces" if="release"/>
 
 	<!-- Allow shaders to work in general. Android and web don't seem to compile my GLSL correctly. -->
 	<haxedef name="SHADERS_ENABLED" if="desktop" />
@@ -102,11 +107,8 @@
 	<!-- WARNING: Can cause MAJOR lag! This is not tested! -->
 	<haxedef name="OPTIONS_DEBUGGING"/>
 
-	<!-- _________________________________ Haxeflags _______________________________ -->
-
-	<!-- https://haxe.org/manual/cr-dce.html -->
-	<haxeflag name="-dce full" unless="mobile" />
-	<haxeflag name="--no-traces" if="release"/>
+	<!-- I hate this. I hate all. -->
+	<!-- haxedef name="PLAYSTATE_INPUT_DEBUGGING" /-->
 
 	<!-- _________________________________ Custom _______________________________ -->
 
