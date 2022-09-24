@@ -25,6 +25,7 @@ set /p menu="Build debug for android? [Y/N/C]"
 cls
 title ColorCove - Building Debug
 echo Compiling, please wait...
+call buildUpdate.bat
 lime test android -debug
 ::-simulator
 echo.
@@ -43,6 +44,7 @@ exit
 cls
 title ColorCove - Building
 echo Compiling, please wait...
+call buildUpdate.bat
 lime test android -release
 echo.
 echo Relase build complete.
