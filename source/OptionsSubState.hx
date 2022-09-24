@@ -4,6 +4,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
+import flixel.input.android.FlxAndroidKey;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -50,19 +51,25 @@ class OptionsSubState extends BlurryFlxSubState
 				MenuState.instance.restoreButtons();
 				MenuState.instance.closeSubState();
 				trace('boowomp 2');
+
+				#if android
+				FlxG.android.preventDefaultKeys = [];
+				#end
 			};
 			FlxTween.tween(bruhCam, {alpha: 0}, 0.65, {ease: FlxEase.cubeOut});
 			tweenOutBlur();
 			trace('boowomp');
 		};
+
+		#if android
+		FlxG.android.preventDefaultKeys = [FlxAndroidKey.BACK];
+		#end
 	}
 
 	override public function update(e:Float)
 	{
 		super.update(e);
-		#if !mobile
-		if (FlxG.keys.justPressed.ESCAPE && !stopSpammingNerd)
+		if (#if mobile FlxG.android.anyJustPressed([FlxAndroidKey.BACK]) #else FlxG.keys.justPressed.ESCAPE #end && !stopSpammingNerd)
 			newPopup.exitFunc();
-		#end
 	}
 }
